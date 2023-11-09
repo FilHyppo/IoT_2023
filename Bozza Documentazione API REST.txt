@@ -1,0 +1,11 @@
+Linux-Like:
+    Creazione master
+    curl -X POST -H "Content-Type: application/json" -d '{"nome":"...","latitudine":...,"longitudine":...,"quota":...}' http://localhost:8000/api/masterigrometri/create/
+    Creazione igrometro
+    curl -X POST -H "Content-Type: application/json" -d '{"nome":"...","latitudine":...,"longitudine":...,"master_id":...}' http://localhost:8000/api/igrometri/create/
+
+Windows(Power-shell):
+    Creazione master:
+    Invoke-RestMethod -Uri "http://localhost:8000/api/masterigrometri/create/" -Method Post -Body ('{"nome":"...","latitudine":...,"longitudine":...,"quota":...}') -ContentType "application/json"
+    Creazione igrometro:
+    Invoke-RestMethod -Uri "http://localhost:8000/api/igrometri/create/" -Method Post -Body ('{"nome":"...","latitudine":...,"longitudine":...,"master_id":...}') -ContentType "application/json"
