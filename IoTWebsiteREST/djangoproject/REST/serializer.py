@@ -1,14 +1,14 @@
 from rest_framework import serializers
-from .models import Idrometro, MasterIdrometri
+from .models import Igrometro, MasterIgrometri
 
-class MasterIdrometriSerializer(serializers.ModelSerializer):
+class MasterIgrometriSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MasterIdrometri
+        model = MasterIgrometri
         fields = ['id', 'nome', 'latitudine', 'longitudine', 'quota']
 
-class IdrometroSerializer(serializers.ModelSerializer):
-    master_id = serializers.PrimaryKeyRelatedField(queryset=MasterIdrometri.objects.all(), source='master', write_only=True)
+class IgrometroSerializer(serializers.ModelSerializer):
+    master_id = serializers.PrimaryKeyRelatedField(queryset=MasterIgrometri.objects.all(), source='master', write_only=True)
 
     class Meta:
-        model = Idrometro
+        model = Igrometro
         fields = ['id', 'nome', 'latitudine', 'longitudine', 'ultima_misurazione', 'master_id']

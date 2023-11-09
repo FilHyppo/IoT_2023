@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Idrometro, MasterIdrometri
+from .models import Igrometro, MasterIgrometri
 
 # Register your models here.
-admin.site.register(Idrometro)
-admin.site.register(MasterIdrometri)
+admin.site.register(Igrometro)
+admin.site.register(MasterIgrometri)

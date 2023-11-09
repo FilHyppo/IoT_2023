@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Master e Idrometri sulla Mappa</title>
+    <title>Master e Igrometri sulla Mappa</title>
     <!-- Includi il link al foglio di stile di Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     {%load static%}
 </head>
 <body>
-    <h1>Master e Idrometri sulla Mappa</h1>
+    <h1>Master e Igrometri sulla Mappa</h1>
     <!-- Aggiungi un div per contenere la mappa -->
     <div id="map" style="height: 400px;"></div>
 
     <ul>
         {% for master in masters %}
             <li>{{ master.nome }} (ID: {{ master.id }})</li>
-            <!-- Aggiungi una sotto-lista per gli idrometri di ogni master -->
+            <!-- Aggiungi una sotto-lista per gli igrometri di ogni master -->
             <ul>
-                {% for idrometro in master.idrometro_set.all %}
-                    <li>{{ idrometro.nome }} (ID: {{ idrometro.id }})</li>
+                {% for igrometro in master.igrometro_set.all %}
+                    <li>{{ igrometro.nome }} (ID: {{ igrometro.id }})</li>
                 {% endfor %}
             </ul>
         {% endfor %}
@@ -34,8 +34,8 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Definisci un'icona personalizzata per gli idrometri con un colore diverso
-        var idrometroIcon = L.icon({
+        // Definisci un'icona personalizzata per gli igrometri con un colore diverso
+        var igrometroIcon = L.icon({
             iconUrl: '{% static "img/marker.png" %}',
             iconSize: [20, 45],
             iconAnchor: [22, 64],
@@ -48,10 +48,10 @@
                 .bindPopup("Nome: {{ master.nome }}<br>ID: {{ master.id }}")
                 .addTo(map);
 
-            // Aggiungi marcatori per ogni idrometro associato al master con l'icona personalizzata
-            {% for idrometro in master.idrometro_set.all %}
-                L.marker([{{ idrometro.latitudine }}, {{ idrometro.longitudine }}], {icon: idrometroIcon})
-                    .bindPopup("Nome: {{ idrometro.nome }}<br>ID: {{ idrometro.id }}")
+            // Aggiungi marcatori per ogni igrometro associato al master con l'icona personalizzata
+            {% for igrometro in master.igrometro_set.all %}
+                L.marker([{{ igrometro.latitudine }}, {{ igrometro.longitudine }}], {icon: igrometroIcon})
+                    .bindPopup("Nome: {{ igrometro.nome }}<br>ID: {{ igrometro.id }}")
                     .addTo(map);
             {% endfor %}
         {% endfor %}

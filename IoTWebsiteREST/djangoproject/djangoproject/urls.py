@@ -17,8 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from website.views import lista_master
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('REST.urls')),

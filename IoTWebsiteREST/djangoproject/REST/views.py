@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .models import Idrometro
-from .serializer import IdrometroSerializer, MasterIdrometriSerializer
+from .models import Igrometro
+from .serializer import IgrometroSerializer, MasterIgrometriSerializer
 
-class IdrometroCreateView(generics.CreateAPIView):
-    queryset = Idrometro.objects.all()
-    serializer_class = IdrometroSerializer
+class IgrometroCreateView(generics.CreateAPIView):
+    queryset = Igrometro.objects.all()
+    serializer_class = IgrometroSerializer
 
-class MasterIdrometriCreateView(generics.CreateAPIView):
-    queryset = Idrometro.objects.all()
-    serializer_class = MasterIdrometriSerializer
+class MasterIgrometriCreateView(generics.CreateAPIView):
+    queryset = Igrometro.objects.all()
+    serializer_class = MasterIgrometriSerializer

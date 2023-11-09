@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import IdrometroCreateView, MasterIdrometriCreateView
+from .views import IgrometroCreateView, MasterIgrometriCreateView
 
 urlpatterns = [
-    path('idrometri/create/', IdrometroCreateView.as_view(), name='idrometro-create'),
-    path('masteridrometri/create/', MasterIdrometriCreateView.as_view(), name='idrometro-create'),
+    path('igrometri/create/', IgrometroCreateView.as_view(), name='igrometro-create'),
+    path('masterigrometri/create/', MasterIgrometriCreateView.as_view(), name='igrometro-create'),
 ]
