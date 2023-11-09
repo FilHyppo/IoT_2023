@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Master e Idrometri sulla Mappa</title>
+    <!-- Includi il link al foglio di stile di Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    {%load static%}
+</head>
+<body>
+    <h1>Master e Idrometri sulla Mappa</h1>
+    <!-- Aggiungi un div per contenere la mappa -->
+    <div id="map" style="height: 400px;"></div>
+
+    <ul>
+        {% for master in masters %}
+            <li>{{ master.nome }} (ID: {{ master.id }})</li>
+            <!-- Aggiungi una sotto-lista per gli idrometri di ogni master -->
+            <ul>
+                {% for idrometro in master.idrometro_set.all %}
+                    <li>{{ idrometro.nome }} (ID: {{ idrometro.id }})</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+
+    <!-- Includi lo script di Leaflet e il tuo script personalizzato -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Inizializza la mappa sulla posizione specifica
+        var map = L.map('map').setView([{{ masters.0.latitudine }}, {{ masters.0.longitudine }}], 10);
+
+        // Aggiungi un livello di mappa (puoi utilizzare altri provider come Mapbox o Google Maps)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Definisci un'icona personalizzata per gli idrometri con un colore diverso
+        var idrometroIcon = L.icon({
+            iconUrl: '{% static "img/marker.png" %}',
+            iconSize: [20, 45],
+            iconAnchor: [22, 64],
+            popupAnchor: [-3, -76],
+        });
+
+        // Aggiungi marcatori per ogni master
+        {% for master in masters %}
+            L.marker([{{ master.latitudine }}, {{ master.longitudine }}])
+                .bindPopup("Nome: {{ master.nome }}<br>ID: {{ master.id }}")
+                .addTo(map);
+
+            // Aggiungi marcatori per ogni idrometro associato al master con l'icona personalizzata
+            {% for idrometro in master.idrometro_set.all %}
+                L.marker([{{ idrometro.latitudine }}, {{ idrometro.longitudine }}], {icon: idrometroIcon})
+                    .bindPopup("Nome: {{ idrometro.nome }}<br>ID: {{ idrometro.id }}")
+                    .addTo(map);
+            {% endfor %}
+        {% endfor %}
+    </script>
+</body>
+</html>
