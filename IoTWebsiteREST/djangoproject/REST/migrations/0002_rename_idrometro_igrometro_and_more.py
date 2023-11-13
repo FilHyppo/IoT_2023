@@ -11,11 +11,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameModel(
-            old_name='Igrometro',
+            old_name='Idrometro',
             new_name='Igrometro',
         ),
         migrations.RenameModel(
-            old_name='MasterIgrometri',
+            old_name='MasterIdrometri',
             new_name='MasterIgrometri',
         ),
     ]

@@ -25,7 +25,7 @@ class IgrometroDestroyView(generics.DestroyAPIView):
 
     def perform_destroy(self, instance):
         instance.delete()
-        return Response({'message': 'Igrometro eliminato con successo.'}, status=status.HTTP_204_NO_CONTENT)
+        return JsonResponse({'message': 'Igrometro eliminato con successo.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class MasterIgrometriDestroyView(generics.DestroyAPIView):

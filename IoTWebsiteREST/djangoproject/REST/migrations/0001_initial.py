@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='MasterIgrometri',
+            name='MasterIdrometri',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('nome', models.CharField(max_length=100)),
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Igrometro',
+            name='Idrometro',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('nome', models.CharField(max_length=100)),
@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('ultima_misurazione', models.JSONField(blank=True, default=dict, null=True)),
                 ('misurazioni', models.JSONField(blank=True, default=list, null=True)),
                 ('attivo', models.BooleanField(default=False)),
-                ('master', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='REST.masterigrometri')),
+                ('master', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='REST.masteridrometri')),
             ],
         ),
     ]
