@@ -1,10 +1,21 @@
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from REST.models import Igrometro, MasterIgrometri
+from django.urls import reverse_lazy
+
 
 def is_admin(user):
     return user.is_authenticated and user.is_staff
 
+class CustomLoginView(LoginView):
+    def get_success_url(self):
+        user = self.request.user
+
+        if user.is_staff:
+            return reverse_lazy('website:lista_master')
+        else:
+            pass
 
 @user_passes_test(is_admin)
 def lista_master(request):

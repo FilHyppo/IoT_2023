@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+        <div id="loginFormContainer" style="align-content: center; text-align: center">
+            <h4 style="align-content: center">Login</h4>
+
+            <form method="post" action="{% url 'website:login' %}">
+                {% csrf_token %}
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required><br>
+                <input type="submit" value="Login">
+            </form>
+
+        </div>
+
+{% endblock %}
+
