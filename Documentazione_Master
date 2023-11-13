@@ -1,0 +1,13 @@
+Lo script in master.py prende i seguenti parametri da linea di comando: [optional]
+    1. --method: ['create', 'update', 'delete', 'insert']
+    2. --model: ['igrometro', 'master']
+    3. [--masterID]: usato solo dagli igrometri per riferirsi al loro master
+    4. [--id]: id dell'elemento a cui facciamo riferimento
+    5. [--name]: nome dell'elemento
+    6. [--lat]: latitudine dell'elemento
+    7. [--lon]: longitudine dell'elemento
+    8. [--alt]: altitudine del master (non ancora presente in ingrometro)
+    9. [--humidity]: umidità della misura rilevata dall'igrometro corrispondente al campo --id
+
+Nota:
+    metodo insert usato solo con i campi --id e --humidity per comunicare la misurazione
