@@ -24,4 +24,4 @@ Windows(Power-shell):
     Invoke-RestMethod -Uri "http://localhost:8000/api/igrometri/405/update/" -Method Put -ContentType "application/json" -Body '{}'
 
     Inserimento rilevazione:(deve contenere id dell'igrometro, data di rilevazione e umidita)
-    Invoke-RestMethod -Uri "http://localhost:8000/api/igrometri/aggiungi-ultima-misurazione/" -Method Post -ContentType "application/json" -Body '{"id":..., "data":..., "umidita":...}'
+    Invoke-RestMethod -Uri "http://localhost:8000/api/igrometri/aggiungi-ultima-misurazione/" -Method Post -ContentType "application/json" -Body '{"id":..., "ultima_misurazione":{"data":..., "umidita":...}}'
