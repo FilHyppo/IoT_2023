@@ -11,7 +11,7 @@
             <li>{{ master.nome }} (ID: {{ master.id }})</li>
             <ul>
                 {% for igrometro in master.igrometro_set.all %}
-                    <li>{{ igrometro.nome }} (ID: {{ igrometro.id }})</li>
+                    <li>{{ igrometro.nome }} {{ igrometro.longitudine}} {{igrometro.latitudine}} (ID: {{ igrometro.id }}), ultime misurazioni: {{ igrometro.misurazioni }}</li>
                 {% endfor %}
             </ul>
         {% endfor %}

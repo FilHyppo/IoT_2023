@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Humidity Data</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+
+<script>
+    // Sample sensor data
+    const sensorData = {{sensors|safe}};
+
+    // Initialize the map
+    const map = L.map('map').setView([45.4642, 9.1900], 13);
+
+    // Add the base map layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Set fixed dimensions for the rectangle in kilometers
+    const fixedWidthKilometers = 0.01;
+    const fixedHeightKilometers = 0.01;
+
+    // Add rectangles to the map based on sensor data
+    sensorData.forEach(sensor => {
+        const rectangle = L.rectangle([
+            [parseFloat(sensor.latitudine_start), parseFloat(sensor.longitudine_start) ],
+            [parseFloat(sensor.latitudine_end), parseFloat(sensor.longitudine_end)]
+        ], {
+            fillColor: getFillColor(sensor.media_valori),
+            color: '#000',
+            weight: 0,
+            opacity: 0,
+            fillOpacity: 0.4    
+        }).bindPopup(`Humidity: ${sensor.humidity}%`).addTo(map);
+    });
+
+    // Function to get fill color based on humidity
+// Function to get fill color based on humidity and number of intervals
+function getFillColor(humidity) {
+    if (humidity <= 10) return '#0ba121'; // Dark Green
+    if (humidity <= 20) return '#27d640'; // Green
+    if (humidity <= 30) return '#69f57e'; // Light Green
+    if (humidity <= 40) return '#90f59f'; // Very Light Green
+    if (humidity <= 50) return '#d3f590'; // Light Yellow-Green
+    if (humidity <= 60) return '#d4f553'; // Yellow-Green
+    if (humidity <= 70) return '#eff553'; // Light Yellow
+    if (humidity <= 80) return '#eff553'; // Light Brown
+    if (humidity <= 90) return '#6e6014'; // Brown
+    return '#695a07'; // Light Brown
+}
+
+</script>
+
+
+
+</body>
+</html>
