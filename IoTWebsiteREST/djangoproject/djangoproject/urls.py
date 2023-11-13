@@ -28,6 +28,6 @@ urlpatterns = [
     #path('api/rest-auth/registration/', include('rest_auth.registration.urls')),
 ]
 
-erase_db()
-init_db()
+#erase_db()
+#init_db()
 

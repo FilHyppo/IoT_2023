@@ -7,5 +7,18 @@ Linux-Like:
 Windows(Power-shell):
     Creazione master:
     Invoke-RestMethod -Uri "http://localhost:8000/api/masterigrometri/create/" -Method Post -Body ('{"nome":"...","latitudine":...,"longitudine":...,"quota":...}') -ContentType "application/json"
+    
+    Eliminazione master:
+    Invoke-RestMethod -Uri "http://localhost:8000/api/masterigrometri/pk/delete" -Method Delete
+    
+    Modifica master:
+    Invoke-RestMethod -Uri "http://localhost:8000/api/masterigrometri/14/update/" -Method Put -ContentType "application/json" -Body '{}'
+    
     Creazione igrometro:
     Invoke-RestMethod -Uri "http://localhost:8000/api/igrometri/create/" -Method Post -Body ('{"nome":"...","latitudine":...,"longitudine":...,"master_id":...}') -ContentType "application/json"
+    
+    Eliminzazione:
+    Invoke-RestMethod -Uri "http://localhost:8000/api/igrometri/pk/delete" -Method Delete
+
+    Modifica:
+    Invoke-RestMethod -Uri "http://localhost:8000/api/igrometri/405/update/" -Method Put -ContentType "application/json" -Body '{}'

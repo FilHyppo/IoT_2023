@@ -12,3 +12,5 @@ class IgrometroSerializer(serializers.ModelSerializer):
     class Meta:
         model = Igrometro
         fields = ['id', 'nome', 'latitudine', 'longitudine', 'ultima_misurazione', 'master_id']
+
+
