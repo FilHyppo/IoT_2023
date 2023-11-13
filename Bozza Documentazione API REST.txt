@@ -17,7 +17,7 @@ Windows(Power-shell):
     Creazione igrometro:
     Invoke-RestMethod -Uri "http://localhost:8000/api/igrometri/create/" -Method Post -Body ('{"nome":"...","latitudine":...,"longitudine":...,"master_id":...}') -ContentType "application/json"
     
-    Eliminzazione Igrometro:
+    Eliminzazione:
     Invoke-RestMethod -Uri "http://localhost:8000/api/igrometri/pk/delete" -Method Delete
 
     Modifica Igrometro:

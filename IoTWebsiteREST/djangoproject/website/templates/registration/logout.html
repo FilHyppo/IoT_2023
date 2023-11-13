@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+
+{% block head %}
+
+{% load static %}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+{% endblock %}
+
+{% block title %} Logout {% endblock %} 
+
+{% block header1 %}
+  <h1>Pagina di Logout</h1>
+{% endblock %}
+
+{% block content %} 
+<div class="hero">
+    <h2 class="titolo_logout">Logout eseguito con successo</h2>
+    <h2 class="sottotitolo_logout">A presto</h2>
+    <br>
+    <br>
+    <a href="{% url 'website:login' %}" class="hero" style="font-size: 20px; padding-left:46%;">
+        Torna al Login</a>
+</div>
+
+
+{% endblock %}

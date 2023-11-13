@@ -12,11 +12,11 @@
         <nav class="nav" style="background-color: #333; padding: 10px">
             <ul class="links">
                 {% if user.is_authenticated and user.is_staff %}
-                    <li><a href="#">Logout</a></li>
+                    <li><a href="{% url 'website:logout' %}">Logout</a></li>
                 {% elif user.is_authenticated %}
                     <li><a href="#">Azione1</a></li>
                     <li><a href="#">Azione2</a></li>
-                    <li><a href="#">Logout</a></li>
+                    <li><a href="{% url 'website:logout' %}">Logout</a></li>
                 {% else %}
                     {% if not 'login' in request.path %}
                         <li><a href="{% url 'website:login' %}" class="nav__link">Login</a></li>
