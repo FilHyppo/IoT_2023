@@ -38,3 +38,7 @@ def erase_db():
     # Cancella tutti i dati nei modelli
     Igrometro.objects.all().delete()
     MasterIgrometri.objects.all().delete()
+
+if __name__ == 'main':
+    erase_db()
+    init_db()
