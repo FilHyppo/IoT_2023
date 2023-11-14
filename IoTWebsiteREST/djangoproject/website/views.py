@@ -67,7 +67,7 @@ def read_and_average():
                                                    longitudine__range=(lon_start, lon_end))
 
         if igrometri_in_rettangolo.exists():
-            media_valori = sum(i.ultima_misurazione["valore"] for i in igrometri_in_rettangolo) / len(
+            media_valori = sum(i.ultima_misurazione["umidita"] for i in igrometri_in_rettangolo) / len(
                 igrometri_in_rettangolo)
 
             rettangoli_dati_medi.append({

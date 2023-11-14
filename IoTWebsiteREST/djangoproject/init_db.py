@@ -16,6 +16,7 @@ import random
 
 
 def init_db():
+    print("Creazione db")
     # Creare istanze di MasterIgrometri
     master1 = MasterIgrometri(nome='Master1', latitudine=45.0, longitudine=9.0, quota=100.0)
     master1.save()
@@ -32,16 +33,21 @@ def init_db():
             latitudine=45.4643 + random.uniform(-0.04, 0.04), 
             longitudine=9.1907 + random.uniform(-0.04, 0.04), 
             master=master1, 
-            ultima_misurazione={'data': datetime.datetime.now().isoformat(), 'valore': random.uniform(0.0, 100.0)}
+            ultima_misurazione={'data': datetime.datetime.now().isoformat(), 'umidita': random.uniform(0.0, 100.0)}
         ).save()
 
 
 
 def erase_db():
     # Cancella tutti i dati nei modelli
+    print("Cancellazione db")
     Igrometro.objects.all().delete()
     MasterIgrometri.objects.all().delete()
 
+erase_db()
+init_db()
+
 if __name__ == 'main':
+    print("qua")
     erase_db()
     init_db()
