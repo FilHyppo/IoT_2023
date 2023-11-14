@@ -1,9 +1,12 @@
+#move to IoTWebsiteREST/djangoproject and run python3 init_db.py
+
+
 import os
 import django
 import datetime  # Importa il modulo datetime per la gestione delle date
 
 # Configura l'ambiente di Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'nomedelprogetto.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangoproject.settings')
 django.setup()
 
 from REST.models import Igrometro, MasterIgrometri
