@@ -14,6 +14,17 @@ class Master:
     def get_current_date(self):
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+    def elimina_misurazione(self, id):
+        url = 'igrometri/elimina-misurazione/'
+        data = {'id': id}
+        headers = {'Content-type': 'application/json'}
+
+        response = requests.delete(self.base_url + url, json=data, headers=headers)
+
+        print(response.status_code)
+        print(response.json())
+
+
     def inserisci_misurazione(self, id, umidita):
         url = 'igrometri/aggiungi-ultima-misurazione/'
         ultima_misurazione = {'data': self.get_current_date(), 'umidita': umidita}
@@ -92,8 +103,8 @@ class Master:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--model', choices=['igrometro', 'master'], required=True, help='Select model')
-    parser.add_argument('--method', choices=['create', 'update', 'delete', 'insert'], required=True, help='Select method')
+    parser.add_argument('--model', choices=['igrometro', 'master', 'misurazione'], required=True, help='Select model')
+    parser.add_argument('--method', choices=['create', 'update', 'delete'], required=True, help='Select method')
 
     parser.add_argument('--masterID', type=int, required=False, help='Select master id')
     parser.add_argument('--name', type=str, required=False, help='Select name')
@@ -120,16 +131,11 @@ if __name__ == '__main__':
                 print('Errore: è necessario specificare --name, --lat, --lon e --alt')
             else:
                 master.crea_master(args.name, args.lat, args.lon, args.alt)
-
-        else:
-            print('Model not found')
-
-    elif args.method == 'insert':
-        if args.model == 'igrometro':
+        elif args.model == 'misurazione':
             if args.id is None or args.humidity is None:
                 print('Errore: è necessario specificare --id e --humidity')
             else:
-                master.inserisci_misurazione(args.id, args.humidity)
+                master.inserisci_misurzione(args.id, args.humidity)
         else:
             print('Model not found')
 
@@ -158,6 +164,11 @@ if __name__ == '__main__':
                 print('Errore: è necessario specificare --id')
             else:
                 master.elimina_master(args.id)
+        elif args.model == 'misurazione':
+            if args.id is None:
+                print('Errore: è necessario specificare --id dell\'igrometro')
+            else:
+                master.elimina_misurazione(args.id)
         else:
             print('Model not found')
 

@@ -7,6 +7,7 @@ urlpatterns = [
     path('igrometri/', IgrometroAPIView.as_view(), name='igrometro-api'),
     path('masterigrometri/', MasterIgrometriAPIView.as_view(), name='masterigrometri-api'),
     path('igrometri/aggiungi-ultima-misurazione/', aggiungi_ultima_misurazione, name='aggiungi_ultima_misurazione'),
+    path('igrometri/elimina-misurazione/', cancella_ultima_misurazione, name='elimina_misurazione'),
 ]
 
 """     

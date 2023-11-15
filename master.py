@@ -17,6 +17,15 @@ def inserisci_misurzione(id, umidita):
     print(response.status_code)
     print(response.json())
 
+def elimina_misurazione(id):
+    url = 'igrometri/elimina-misurazione/'
+    data = {'id': id}
+    headers = {'Content-type': 'application/json'}
+
+    response = requests.delete(URL_BASE + url, json=data, headers=headers)
+
+    print(response.status_code)
+    print(response.json())
 
 
 def crea_igrometro(master_id, nome, latitudine, longitudine, attivo):
@@ -114,8 +123,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--model', choices=['igrometro', 'master'], required=True, help='Select model')
-    parser.add_argument('--method', choices=['create', 'update', 'delete', 'insert'], required=True, help='Select method')
+    parser.add_argument('--model', choices=['igrometro', 'master', 'misurazione'], required=True, help='Select model')
+    parser.add_argument('--method', choices=['create', 'update', 'delete'], required=True, help='Select method')
 
 
     parser.add_argument('--masterID', type=int, required=False, help='Select master id')
@@ -142,11 +151,7 @@ if __name__ == '__main__':
             else:
                 crea_master(args.name, args.lat, args.lon, args.alt)
 
-        else:
-            print('Model not found')
-
-    elif args.method == 'insert':
-        if args.model == 'igrometro':
+        elif args.model == 'misurazione':
             if args.id is None or args.humidity is None:
                 print('Errore: è necessario specificare --id e --humidity')
             else:
@@ -171,14 +176,19 @@ if __name__ == '__main__':
     elif args.method == 'delete':
         if args.model == 'igrometro':
             if args.id is None:
-                print('Errore: è necessario specificare --id')
+                print('Errore: è necessario specificare --id dell\'igrometro')
             else:
                 elimina_igrmetro(args.id)
         elif args.model == 'master':
             if args.id is None:
-                print('Errore: è necessario specificare --id')
+                print('Errore: è necessario specificare --id del master')
             else:
                 elimina_master(args.id)
+        elif args.model == 'misurazione':
+            if args.id is None:
+                print('Errore: è necessario specificare --id dell\'igrometro')
+            else:
+                elimina_misurazione(args.id)
         else:
             print('Model not found')
 
