@@ -1,0 +1,273 @@
+# Aprire il file su https://editor.swagger.io/. C'è anche la ossibilità di provare le api. 
+# VsCode volendo ha l'estensione per swaggar.io
+
+openapi: 3.0.0
+info:
+  title: Weather Station API
+  description: API for managing weather stations and measurements
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8000/api/
+paths:
+  /igrometri/create/:
+    post:
+      summary: Crea un nuovo Igrometro
+      operationId: createIgrometro
+      tags:
+        - Igrometro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IgrometroInput'
+      responses:
+        '201':
+          description: Igrometro creato con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IgrometroOutput'
+
+  /masterigrometri/create/:
+    post:
+      summary: Crea un nuovo Master
+      operationId: createMasterIgrometri
+      tags:
+        - MasterIgrometri
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MasterIgrometriInput'
+      responses:
+        '201':
+          description: Master creato con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterOutput'
+
+  /igrometri/{id}/delete/:
+    delete:
+      summary: Elimina un Igrometro
+      operationId: deleteIgrometro
+      tags:
+        - Igrometro
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: L' ID dell'Igrometro da eliminare
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Igrometro eliminato con successo
+
+  /masterigrometri/{id}/delete/:
+    delete:
+      summary: elimina un Master
+      operationId: deleteMasterIgrometri
+      tags:
+        - MasterIgrometri
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: L'ID del Matser da eliminare
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Master eliminato con successo.
+
+  /igrometri/{id}/update/:
+    put:
+      summary: Aggiorna un  Igrometro
+      operationId: updateIgrometro
+      tags:
+        - Igrometro
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: L'ID dell'Igrometro to aggiornare
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IgrometroInput'
+      responses:
+        '200':
+          description: Igrometro aggiornato con succeso 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  /masterigrometri/{id}/update/:
+    put:
+      summary: Aggiornamento di un Master
+      operationId: updateMasterIgrometri
+      tags:
+        - MasterIgrometri
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: L'ID del Master da aggiornare 
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MasterIgrometriInput'
+      responses:
+        '200':
+          description: Master aggriornato con successo 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  /igrometri/aggiungi-ultima-misurazione/:
+    post:
+      summary: Aggiungi l'ultima misurazione di un Igrometro 
+      operationId: aggiungiUltimaMisurazione
+      tags:
+        - Igrometro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UltimaMisurazioneInput'
+      responses:
+        '200':
+          description: Ultima misurazione aggiornata con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  error:
+                    type: string
+
+components:
+  schemas:
+    Igrometro:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        latitudine:
+          type: number
+        longitudine:
+          type: number
+        data_creazione:
+          type: string
+          format: date-time
+        ultima_misurazione:
+          type: object
+        misurazioni:
+          type: array
+          items:
+            type: object
+        attivo:
+          type: boolean
+        master_id:
+          type: integer
+
+    MasterIgrometri:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        latitudine:
+          type: number
+        longitudine:
+          type: number
+        data_creazione:
+          type: string
+          format: date-time
+        quota:
+          type: number
+
+    IgrometroInput:
+      type: object
+      properties:
+        nome:
+          type: string
+        latitudine:
+          type: number
+        longitudine:
+          type: number
+        attivo:
+          type: boolean
+        master_id:
+          type: integer
+
+    MasterIgrometriInput:
+      type: object
+      properties:
+        nome:
+          type: string
+        latitudine:
+          type: number
+        longitudine:
+          type: number
+        quota:
+          type: number
+
+    UltimaMisurazioneInput:
+      type: object
+      properties:
+        id:
+          type: integer
+        ultima_misurazione:
+          type: object
+          
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+          
+    IgrometroOutput:
+      type: object
+      properties:
+        nome:
+          type: string
+        latitudine:
+          type: number
+        longitudine:
+          type: number
+        master_id:
+          type: integer
+
+    MasterOutput:
+      type: object
+      properties:
+        nome:
+          type: string
+        latitudine:
+          type: number
+        longitudine:
+          type: number
+        quota:
+          type: integer          
