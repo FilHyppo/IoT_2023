@@ -20,7 +20,7 @@ def inserisci_misurzione(id, umidita):
 
 
 def crea_igrometro(master_id, nome, latitudine, longitudine, attivo):
-    url = 'igrometri/create/'
+    url = 'igrometri/'
     data = {'master_id': master_id, 'nome': nome, 'latitudine': latitudine, 'longitudine': longitudine, 'attivo': attivo}
     headers = {'Content-type': 'application/json'}
 
@@ -30,15 +30,21 @@ def crea_igrometro(master_id, nome, latitudine, longitudine, attivo):
     print(response.json())
 
 def elimina_igrmetro(id):
-    url = 'igrometri/' + str(id) + '/delete/'
-    response = requests.delete(URL_BASE + url)
+    url = 'igrometri/'
+    data = {'id': id}
+    headers = {'Content-type': 'application/json'}
+
+    response = requests.delete(URL_BASE + url, json=data, headers=headers)
 
     print(response.status_code)
-#    print(response.json())
+    try:
+        print(response.json())
+    except:
+        pass
 
 def aggiorna_igrometro(id, master_id = None, nome = None, latitudine = None, longitudine = None, attivo = None):
-    url = 'igrometri/' + str(id) + '/update/'
-    data = dict()
+    url = 'igrometri/'
+    data = {'id': id}
     if master_id is not None:
         data['master_id'] = master_id
     if nome is not None:
@@ -60,7 +66,7 @@ def aggiorna_igrometro(id, master_id = None, nome = None, latitudine = None, lon
 
 
 def crea_master(nome, latitudine, longitudine, quota):
-    url = 'masterigrometri/create/'
+    url = 'masterigrometri/'
     data = {'nome': nome, 'latitudine': latitudine, 'longitudine': longitudine, 'quota': quota}
     headers = {'Content-type': 'application/json'}
 
@@ -70,15 +76,22 @@ def crea_master(nome, latitudine, longitudine, quota):
     print(response.json())
 
 def elimina_master(id):
-    url = 'masterigrometri/' + str(id) + '/delete/'
-    response = requests.delete(URL_BASE + url)
+    url = 'masterigrometri/'
+    data = {'id': id}
+    headers = {'Content-type': 'application/json'}
+    response = requests.delete(URL_BASE + url, json=data, headers=headers)
 
     print(response.status_code)
-#    print(response.json())
+    #ignora altrimenti
+    try:
+        print(response.json())
+    except:
+        pass
+
 
 def aggiorna_master(id, nome = None, latitudine = None, longitudine = None, quota = None):
-    url = 'masterigrometri/' + str(id) + '/update/'
-    data = {}
+    url = 'masterigrometri/'
+    data = {'id': id}
     if nome is not None:
         data['nome'] = nome
     if latitudine is not None:
@@ -90,6 +103,7 @@ def aggiorna_master(id, nome = None, latitudine = None, longitudine = None, quot
 
     headers = {'Content-type': 'application/json'}
 
+    print(data)
     response = requests.put(URL_BASE + url, json=data, headers=headers)
 
     print(response.status_code)

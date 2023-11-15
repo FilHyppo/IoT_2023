@@ -3,9 +3,14 @@ import datetime
 import argparse
 
 class Master:
-    def __init__(self, base_url):
+    def __init__(self, base_url='http://localhost:8000/api/'):
         self.base_url = base_url
-    
+
+    def _make_request(self, method, url, data=None):
+        headers = {'Content-type': 'application/json'}
+        response = requests.request(method, self.base_url + url, json=data, headers=headers)
+        return response
+
     def get_current_date(self):
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -13,32 +18,30 @@ class Master:
         url = 'igrometri/aggiungi-ultima-misurazione/'
         ultima_misurazione = {'data': self.get_current_date(), 'umidita': umidita}
         data = {'id': id, "ultima_misurazione": ultima_misurazione}
-        headers = {'Content-type': 'application/json'}
-
-        response = requests.post(self.base_url + url, json=data, headers=headers)
-
+        response = self._make_request('POST', url, data)
         print(response.status_code)
         print(response.json())
 
     def crea_igrometro(self, master_id, nome, latitudine, longitudine, attivo):
-        url = 'igrometri/create/'
+        url = 'igrometri/'
         data = {'master_id': master_id, 'nome': nome, 'latitudine': latitudine, 'longitudine': longitudine, 'attivo': attivo}
-        headers = {'Content-type': 'application/json'}
-
-        response = requests.post(self.base_url + url, json=data, headers=headers)
-
+        response = self._make_request('POST', url, data)
         print(response.status_code)
         print(response.json())
 
     def elimina_igrometro(self, id):
-        url = 'igrometri/' + str(id) + '/delete/'
-        response = requests.delete(self.base_url + url)
-
+        url = 'igrometri/'
+        data = {'id': id}
+        response = self._make_request('DELETE', url, data)
         print(response.status_code)
+        try:
+            print(response.json())
+        except:
+            pass
 
     def aggiorna_igrometro(self, id, master_id=None, nome=None, latitudine=None, longitudine=None, attivo=None):
-        url = 'igrometri/' + str(id) + '/update/'
-        data = {}
+        url = 'igrometri/'
+        data = {'id': id}
         if master_id is not None:
             data['master_id'] = master_id
         if nome is not None:
@@ -49,33 +52,30 @@ class Master:
             data['longitudine'] = longitudine
         if attivo is not None:
             data['attivo'] = attivo
-
-        headers = {'Content-type': 'application/json'}
-
-        response = requests.put(self.base_url + url, json=data, headers=headers)
-
+        response = self._make_request('PUT', url, data)
         print(response.status_code)
         print(response.json())
 
     def crea_master(self, nome, latitudine, longitudine, quota):
-        url = 'masterigrometri/create/'
+        url = 'masterigrometri/'
         data = {'nome': nome, 'latitudine': latitudine, 'longitudine': longitudine, 'quota': quota}
-        headers = {'Content-type': 'application/json'}
-
-        response = requests.post(self.base_url + url, json=data, headers=headers)
-
+        response = self._make_request('POST', url, data)
         print(response.status_code)
         print(response.json())
 
     def elimina_master(self, id):
-        url = 'masterigrometri/' + str(id) + '/delete/'
-        response = requests.delete(self.base_url + url)
-
+        url = 'masterigrometri/'
+        data = {'id': id}
+        response = self._make_request('DELETE', url, data)
         print(response.status_code)
+        try:
+            print(response.json())
+        except:
+            pass
 
     def aggiorna_master(self, id, nome=None, latitudine=None, longitudine=None, quota=None):
-        url = 'masterigrometri/' + str(id) + '/update/'
-        data = {}
+        url = 'masterigrometri/'
+        data = {'id': id}
         if nome is not None:
             data['nome'] = nome
         if latitudine is not None:
@@ -84,13 +84,10 @@ class Master:
             data['longitudine'] = longitudine
         if quota is not None:
             data['quota'] = quota
-
-        headers = {'Content-type': 'application/json'}
-
-        response = requests.put(self.base_url + url, json=data, headers=headers)
-
+        response = self._make_request('PUT', url, data)
         print(response.status_code)
         print(response.json())
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -108,9 +105,8 @@ if __name__ == '__main__':
     parser.add_argument('--humidity', type=float, required=False, help='Select humidity')
 
     args = parser.parse_args()
-    base_url = 'http://localhost:8000/api/'
 
-    master = Master(base_url)
+    master = Master()
 
     if args.method == 'create':
         if args.model == 'igrometro':

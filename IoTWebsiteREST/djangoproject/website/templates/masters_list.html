@@ -8,12 +8,20 @@
 
     <ul>
         {% for master in masters %}
-            <li>{{ master.nome }} (ID: {{ master.id }})</li>
-            <ul>
-                {% for igrometro in master.igrometro_set.all %}
-                    <li>{{ igrometro.nome }} {{ igrometro.longitudine }} {{ igrometro.latitudine }} (ID: {{ igrometro.id }}), ultime misurazioni: {{ igrometro.misurazioni }}</li>
-                {% endfor %}
-            </ul>
+            <li>
+                <a href="#master_{{ master.id }}" class="map-link" data-lat="{{ master.latitudine }}" data-lon="{{ master.longitudine }}">
+                    {{ master.nome }} (ID: {{ master.id }}) {{ master.latitudine }}, {{ master.longitudine }}
+                </a>
+                <ul>
+                    {% for igrometro in master.igrometro_set.all %}
+                        <li>
+                            <a href="#igrometro_{{ igrometro.id }}" class="map-link" data-lat="{{ igrometro.latitudine }}" data-lon="{{ igrometro.longitudine }}">
+                                {{ igrometro.nome }} {{ igrometro.longitudine }} {{ igrometro.latitudine }} (ID: {{ igrometro.id }}), ultime misurazioni: {{ igrometro.misurazioni }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}
@@ -34,13 +42,23 @@
             popupAnchor: [-3, -76],
         });
 
+        // Aggiungi azione di scorrimento quando viene fatto clic su un collegamento
+        document.querySelectorAll('.map-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var lat = parseFloat(e.target.getAttribute('data-lat'));
+                var lon = parseFloat(e.target.getAttribute('data-lon'));
+                map.setView([lat, lon], 15);
+            });
+        });
+
         {% for master in masters %}
-            L.marker([{{ master.latitudine }}, {{ master.longitudine }}])
+            L.marker([{{ master.latitudine }}, {{ master.longitudine }}], {id: 'master_{{ master.id }}'})
                 .bindPopup("Nome: {{ master.nome }}<br>ID: {{ master.id }}")
                 .addTo(map);
 
             {% for igrometro in master.igrometro_set.all %}
-                L.marker([{{ igrometro.latitudine }}, {{ igrometro.longitudine }}], {icon: igrometroIcon})
+                L.marker([{{ igrometro.latitudine }}, {{ igrometro.longitudine }}], {icon: igrometroIcon, id: 'igrometro_{{ igrometro.id }}'})
                     .bindPopup("Nome: {{ igrometro.nome }}<br>ID: {{ igrometro.id }}")
                     .addTo(map);
             {% endfor %}
