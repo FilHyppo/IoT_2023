@@ -7,7 +7,7 @@ URL_BASE = 'http://localhost:8000/api/'
 
 
 def inserisci_misurzione(id, umidita):
-    url = 'igrometri/aggiungi-ultima-misurazione/'
+    url = 'igrometri/misurazioni/'
     ultima_misurazione = {'data': today, 'umidita': umidita}
     data = {'id': id, "ultima_misurazione": ultima_misurazione}
     headers = {'Content-type': 'application/json'}
@@ -18,7 +18,7 @@ def inserisci_misurzione(id, umidita):
     print(response.json())
 
 def elimina_misurazione(id):
-    url = 'igrometri/elimina-misurazione/'
+    url = 'igrometri/misurazioni/'
     data = {'id': id}
     headers = {'Content-type': 'application/json'}
 

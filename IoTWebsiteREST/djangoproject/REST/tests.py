@@ -129,16 +129,15 @@ class MisurazioneViewTest(TestCase):
             latitudine=0.0,
             longitudine=0.0,
         )
-        self.BASE_URL = 'http://localhost:8000/api'
+        self.url = reverse('misurazioni-api')
 
     def test_aggiungi_e_cancella_ultima_misurazione(self):
-        url = self.BASE_URL + '/igrometri/aggiungi-ultima-misurazione/'
         data = {
             'id': self.igrometro.id,
             'ultima_misurazione': {'data': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 'umidita': 50.0}
         }
 
-        response = self.client.post(url, data, format='json', content_type='application/json')
+        response = self.client.post(self.url, data, format='json', content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('message', response.json())
         self.assertEqual(response.json()['message'], 'Ultima misurazione aggiunta con successo.')
@@ -148,9 +147,8 @@ class MisurazioneViewTest(TestCase):
         self.assertEqual(igrometro.ultima_misurazione, data['ultima_misurazione'])
         self.assertIn(data['ultima_misurazione'], igrometro.misurazioni)
 
-        url = reverse('elimina_misurazione')
 
-        response = self.client.delete(url, {'id': self.igrometro.id}, format='json', content_type='application/json')
+        response = self.client.delete(self.url, {'id': self.igrometro.id}, format='json', content_type='application/json')
         # Verifica che la risposta sia corretta
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {'message': 'Ultima misurazione cancellata con successo.'})
@@ -161,9 +159,8 @@ class MisurazioneViewTest(TestCase):
         
     def test_cancella_ultima_misurazione_errore_igrometro_non_esiste(self):
         # Costruisci l'URL per la vista
-        url = reverse('elimina_misurazione')
         # Esegui una richiesta DELETE con un ID inesistente all'URL
-        response = self.client.delete(url, {'id': 999}, format='json', content_type='application/json')
+        response = self.client.delete(self.url, {'id': 999}, format='json', content_type='application/json')
         # Verifica che la risposta sia corretta
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.json(), {'error': 'L\'igrometro specificato non esiste.'})
@@ -171,7 +168,6 @@ class MisurazioneViewTest(TestCase):
     def test_cancella_ultima_misurazione_errore_nessuna_misurazione_da_cancellare(self):
         # Rimuovi l'ultima misurazione in modo che non ce ne siano
         # Costruisci l'URL per la vista
-        url = reverse('elimina_misurazione')    # Esegui una richiesta DELETE all'URL
-        response = self.client.delete(url, {'id': self.igrometro.id}, format='json', content_type='application/json')    # Verifica che la risposta sia corretta
+        response = self.client.delete(self.url, {'id': self.igrometro.id}, format='json', content_type='application/json')    # Verifica che la risposta sia corretta
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.json(), {'error': 'Nessuna misurazione da cancellare.'})

@@ -15,7 +15,7 @@ class Master:
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def elimina_misurazione(self, id):
-        url = 'igrometri/elimina-misurazione/'
+        url = 'igrometri/misurazioni/'
         data = {'id': id}
         headers = {'Content-type': 'application/json'}
 
@@ -26,7 +26,7 @@ class Master:
 
 
     def inserisci_misurazione(self, id, umidita):
-        url = 'igrometri/aggiungi-ultima-misurazione/'
+        url = 'igrometri/misurazioni/'
         ultima_misurazione = {'data': self.get_current_date(), 'umidita': umidita}
         data = {'id': id, "ultima_misurazione": ultima_misurazione}
         response = self._make_request('POST', url, data)
@@ -135,7 +135,7 @@ if __name__ == '__main__':
             if args.id is None or args.humidity is None:
                 print('Errore: è necessario specificare --id e --humidity')
             else:
-                master.inserisci_misurzione(args.id, args.humidity)
+                master.inserisci_misurazione(args.id, args.humidity)
         else:
             print('Model not found')
 

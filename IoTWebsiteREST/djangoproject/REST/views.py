@@ -148,6 +148,16 @@ class MasterIgrometriAPIView(APIView):
         data = {'message': response.content.decode('utf-8')}
         return JsonResponse(data, status=response.status_code)
 
+@api_view(['POST', 'DELETE'])
+def misurazioni(request):
+    if request.method == 'POST':
+        return aggiungi_ultima_misurazione(request._request)
+    elif request.method == 'DELETE':
+        return cancella_ultima_misurazione(request._request)
+    else:
+        return JsonResponse({'error': 'Metodo non supportato.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
 @api_view(['POST'])
 def aggiungi_ultima_misurazione(request):
     try:
