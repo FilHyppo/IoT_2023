@@ -43,10 +43,9 @@ class IgrometroAPIView(APIView):
 
         return JsonResponse(data, status=response.status_code)
 
-    def put(self, request):
-        # Estrai l'ID dell'oggetto Igrometro
+    def put(self, request, pk=None):
         try:
-            igrometro = Igrometro.objects.get(id=request.data.get('id'))
+            igrometro = Igrometro.objects.get(id=pk)
         except Igrometro.DoesNotExist:
             return JsonResponse({'error': 'L\'igrometro specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)        # Estrai il campo specifico da modificare dal corpo della richiesta
         updated_fields = []
@@ -67,14 +66,8 @@ class IgrometroAPIView(APIView):
 
 
 
-    def delete(self, request):
+    def delete(self, request, pk=None):
         delete_view = IgrometroDestroyView.as_view()
-
-        try:
-            pk = request.data.get('id')
-        except:
-            return JsonResponse({'error': 'ID non fornito.'}, status=status.HTTP_400_BAD_REQUEST)
-
         #controllo se l'id esiste
         try:
             igrometro = Igrometro.objects.get(id=pk)
@@ -88,7 +81,6 @@ class IgrometroAPIView(APIView):
         data = {'message': response.content.decode('utf-8')}
         return JsonResponse(data, status=response.status_code)
 
-
 class MasterIgrometriAPIView(APIView):
     def post(self, request):
         # Use the existing MasterIgrometriCreateView to handle the request
@@ -101,10 +93,10 @@ class MasterIgrometriAPIView(APIView):
 
         return JsonResponse(data, status=response.status_code)
      
-    def put(self, request):
+    def put(self, request, pk=None):
         try:
         # Recupera l'oggetto Igrometro
-            master = MasterIgrometri.objects.get(id=request.data.get('id'))
+            master = MasterIgrometri.objects.get(id=pk)
         except MasterIgrometri.DoesNotExist:
             return JsonResponse({'error': 'Il master specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)
         updated_fields = []
@@ -127,15 +119,9 @@ class MasterIgrometriAPIView(APIView):
         return JsonResponse({'message': f'Campi {updated_fields} modificati con successo.'}, status=status.HTTP_200_OK)
 
 
-    def delete(self, request):
+    def delete(self, request, pk=None):
         delete_view = MasterIgrometriDestroyView.as_view()
-
-        try:
-            pk = request.data.get('id')
-        except:
-            return JsonResponse({'error': 'ID non fornito.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        #controllo che sista il master
+        #controllo che esista il master
         try:
             master = MasterIgrometri.objects.get(id=pk)
         except MasterIgrometri.DoesNotExist:
@@ -149,50 +135,42 @@ class MasterIgrometriAPIView(APIView):
         return JsonResponse(data, status=response.status_code)
 
 @api_view(['POST', 'DELETE'])
-def misurazioni(request):
+def misurazioni(request, pk):
+    try:
+        Igrometro.objects.get(id=pk)
+    except Igrometro.DoesNotExist:
+        return JsonResponse({'error': 'L\'igrometro specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)
+    
     if request.method == 'POST':
-        return aggiungi_ultima_misurazione(request._request)
+        return aggiungi_ultima_misurazione(request._request, pk)
     elif request.method == 'DELETE':
-        return cancella_ultima_misurazione(request._request)
+        return cancella_ultima_misurazione(request._request, pk)
     else:
         return JsonResponse({'error': 'Metodo non supportato.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['POST'])
-def aggiungi_ultima_misurazione(request):
-    try:
-        igrometro_id = request.data.get('id')
-        igrometro = Igrometro.objects.get(id=igrometro_id)
-        nuova_misurazione = request.data.get('ultima_misurazione')
-
-        #if "umidita" not in nuova_misurazione.keys() or "data" not in nuova_misurazione.keys():
-        if not nuova_misurazione.keys() <= set(PARAMS):
-            return JsonResponse({'error':'Campi misurazione errati'})
-
-        igrometro.ultima_misurazione = nuova_misurazione
-        igrometro.misurazioni.append(nuova_misurazione)
-        igrometro.save()
-        return JsonResponse({'message': 'Ultima misurazione aggiunta con successo.'}, status=status.HTTP_200_OK)
-    except Igrometro.DoesNotExist:
-        return JsonResponse({'error': 'L\'igrometro specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)
+def aggiungi_ultima_misurazione(request, igrometro_id):
+    igrometro = Igrometro.objects.get(id=igrometro_id)
+    nuova_misurazione = request.data.get('ultima_misurazione')
+    #if "umidita" not in nuova_misurazione.keys() or "data" not in nuova_misurazione.keys():
+    if not nuova_misurazione.keys() <= set(PARAMS):
+        return JsonResponse({'error':'Campi misurazione errati'})
+    igrometro.ultima_misurazione = nuova_misurazione
+    igrometro.misurazioni.append(nuova_misurazione)
+    igrometro.save()
+    return JsonResponse({'message': 'Ultima misurazione aggiunta con successo.'}, status=status.HTTP_200_OK)
     
 
 @api_view(['DELETE'])
-def cancella_ultima_misurazione(request):
-    try:
-        igrometro_id = request.data.get('id')
-        igrometro = Igrometro.objects.get(id=igrometro_id)
-
-        # Verifica che ci siano misurazioni da cancellare
-        if not igrometro.misurazioni:
-            return JsonResponse({'error': 'Nessuna misurazione da cancellare.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Rimuovi l'ultima misurazione
-        ultima_misurazione = igrometro.misurazioni.pop()
-        #ultima misurazione diventa quella in fondo alla lista
-        igrometro.ultima_misurazione = igrometro.misurazioni[-1] if len(igrometro.misurazioni) > 0 else None  # Puoi impostare l'ultima misurazione su None se vuoi
-        igrometro.save()
-
-        return JsonResponse({'message': 'Ultima misurazione cancellata con successo.'}, status=status.HTTP_200_OK)
-    except Igrometro.DoesNotExist:
-        return JsonResponse({'error': 'L\'igrometro specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)
+def cancella_ultima_misurazione(request, igrometro_id):
+    igrometro = Igrometro.objects.get(id=igrometro_id)
+    # Verifica che ci siano misurazioni da cancellare
+    if not igrometro.misurazioni:
+        return JsonResponse({'error': 'Nessuna misurazione da cancellare.'}, status=status.HTTP_400_BAD_REQUEST)
+    # Rimuovi l'ultima misurazione
+    ultima_misurazione = igrometro.misurazioni.pop()
+    #ultima misurazione diventa quella in fondo alla lista
+    igrometro.ultima_misurazione = igrometro.misurazioni[-1] if len(igrometro.misurazioni) > 0 else None  # Puoi impostare l'ultima misurazione su None se vuoi
+    igrometro.save()
+    return JsonResponse({'message': 'Ultima misurazione cancellata con successo.'}, status=status.HTTP_200_OK)

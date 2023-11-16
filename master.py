@@ -7,9 +7,9 @@ URL_BASE = 'http://localhost:8000/api/'
 
 
 def inserisci_misurzione(id, umidita):
-    url = 'igrometri/misurazioni/'
+    url = f'igrometri/{id}/misurazioni/'
     ultima_misurazione = {'data': today, 'umidita': umidita}
-    data = {'id': id, "ultima_misurazione": ultima_misurazione}
+    data = {"ultima_misurazione": ultima_misurazione}
     headers = {'Content-type': 'application/json'}
 
     response = requests.post(URL_BASE + url, json=data, headers=headers)
@@ -18,11 +18,9 @@ def inserisci_misurzione(id, umidita):
     print(response.json())
 
 def elimina_misurazione(id):
-    url = 'igrometri/misurazioni/'
-    data = {'id': id}
-    headers = {'Content-type': 'application/json'}
+    url = f'igrometri/{id}/misurazioni/'
 
-    response = requests.delete(URL_BASE + url, json=data, headers=headers)
+    response = requests.delete(URL_BASE + url)
 
     print(response.status_code)
     print(response.json())
@@ -39,11 +37,10 @@ def crea_igrometro(master_id, nome, latitudine, longitudine, attivo):
     print(response.json())
 
 def elimina_igrmetro(id):
-    url = 'igrometri/'
-    data = {'id': id}
+    url = f'igrometri/{id}'
     headers = {'Content-type': 'application/json'}
 
-    response = requests.delete(URL_BASE + url, json=data, headers=headers)
+    response = requests.delete(URL_BASE + url)
 
     print(response.status_code)
     try:
@@ -52,8 +49,8 @@ def elimina_igrmetro(id):
         pass
 
 def aggiorna_igrometro(id, master_id = None, nome = None, latitudine = None, longitudine = None, attivo = None):
-    url = 'igrometri/'
-    data = {'id': id}
+    url = f'igrometri/{id}/'
+    data = dict()
     if master_id is not None:
         data['master_id'] = master_id
     if nome is not None:
@@ -85,10 +82,8 @@ def crea_master(nome, latitudine, longitudine, quota):
     print(response.json())
 
 def elimina_master(id):
-    url = 'masterigrometri/'
-    data = {'id': id}
-    headers = {'Content-type': 'application/json'}
-    response = requests.delete(URL_BASE + url, json=data, headers=headers)
+    url = f'masterigrometri/{id}'
+    response = requests.delete(URL_BASE + url)
 
     print(response.status_code)
     #ignora altrimenti
@@ -99,8 +94,8 @@ def elimina_master(id):
 
 
 def aggiorna_master(id, nome = None, latitudine = None, longitudine = None, quota = None):
-    url = 'masterigrometri/'
-    data = {'id': id}
+    url = f'masterigrometri/{id}/'
+    data = dict()
     if nome is not None:
         data['nome'] = nome
     if latitudine is not None:

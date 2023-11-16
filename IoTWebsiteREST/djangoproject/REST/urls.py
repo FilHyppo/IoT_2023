@@ -5,8 +5,10 @@ from .views import *
 
 urlpatterns = [
     path('igrometri/', IgrometroAPIView.as_view(), name='igrometro-api'),
+    path('igrometri/<int:pk>/', IgrometroAPIView.as_view(), name='igrometro-api-pk'),
+    path('igrometri/<int:pk>/misurazioni/', misurazioni, name='misurazioni-api'),
     path('masterigrometri/', MasterIgrometriAPIView.as_view(), name='masterigrometri-api'),
-    path('igrometri/misurazioni/', misurazioni, name='misurazioni-api'),
+    path('masterigrometri/<int:pk>/', MasterIgrometriAPIView.as_view(), name='masterigrometri-api-pk'),
 ]
 
 """     

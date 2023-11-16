@@ -15,20 +15,19 @@ class Master:
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def elimina_misurazione(self, id):
-        url = 'igrometri/misurazioni/'
-        data = {'id': id}
+        url = f'igrometri/{id}/misurazioni/'
         headers = {'Content-type': 'application/json'}
 
-        response = requests.delete(self.base_url + url, json=data, headers=headers)
+        response = requests.delete(self.base_url + url)
 
         print(response.status_code)
         print(response.json())
 
 
     def inserisci_misurazione(self, id, umidita):
-        url = 'igrometri/misurazioni/'
+        url = f'igrometri/{id}/misurazioni/'
         ultima_misurazione = {'data': self.get_current_date(), 'umidita': umidita}
-        data = {'id': id, "ultima_misurazione": ultima_misurazione}
+        data = {"ultima_misurazione": ultima_misurazione}
         response = self._make_request('POST', url, data)
         print(response.status_code)
         print(response.json())
@@ -41,9 +40,8 @@ class Master:
         print(response.json())
 
     def elimina_igrometro(self, id):
-        url = 'igrometri/'
-        data = {'id': id}
-        response = self._make_request('DELETE', url, data)
+        url = f'igrometri/{id}/'
+        response = self._make_request('DELETE', url)
         print(response.status_code)
         try:
             print(response.json())
@@ -51,8 +49,8 @@ class Master:
             pass
 
     def aggiorna_igrometro(self, id, master_id=None, nome=None, latitudine=None, longitudine=None, attivo=None):
-        url = 'igrometri/'
-        data = {'id': id}
+        url = f'igrometri/{id}/'
+        data = dict()
         if master_id is not None:
             data['master_id'] = master_id
         if nome is not None:
@@ -75,7 +73,7 @@ class Master:
         print(response.json())
 
     def elimina_master(self, id):
-        url = 'masterigrometri/'
+        url = f'masterigrometri/{id}/'
         data = {'id': id}
         response = self._make_request('DELETE', url, data)
         print(response.status_code)
@@ -85,8 +83,8 @@ class Master:
             pass
 
     def aggiorna_master(self, id, nome=None, latitudine=None, longitudine=None, quota=None):
-        url = 'masterigrometri/'
-        data = {'id': id}
+        url = f'masterigrometri/{id}/'
+        data = dict()
         if nome is not None:
             data['nome'] = nome
         if latitudine is not None:
