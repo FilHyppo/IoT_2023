@@ -113,9 +113,8 @@ def aggiorna_master(id, nome = None, latitudine = None, longitudine = None, quot
     print(response.status_code)
     print(response.json())
 
-
-if __name__ == '__main__':
-
+def main():
+    
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--model', choices=['igrometro', 'master', 'misurazione'], required=True, help='Select model')
@@ -189,3 +188,6 @@ if __name__ == '__main__':
 
     else:
         print('Method not found') #inutile a rigor di logica
+
+if __name__ == '__main__':
+    main()
