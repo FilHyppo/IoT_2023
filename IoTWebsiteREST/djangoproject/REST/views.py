@@ -39,6 +39,17 @@ class IgrometroAPIView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    def get(self, request, pk):
+        try:
+            igrometro = Igrometro.objects.get(id=pk)
+        except Igrometro.DoesNotExist:
+            return JsonResponse({'error': 'L\'igrometro specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)
+        #voglio ritornare un json con tutte le ultime misurazioni degli igrometri sotto il master
+        data = []
+        if igrometro.ultima_misurazione is not None:
+            data.append({'id': igrometro.id, 'nome': igrometro.nome, 'misurazioni': igrometro.misurazioni})
+        return JsonResponse({'data': data}, status=status.HTTP_200_OK)
+
     def post(self, request):
         # Use the existing MasterIgrometriCreateView to handle the request
         create_view = IgrometroCreateView.as_view()
@@ -91,6 +102,21 @@ class IgrometroAPIView(APIView):
 class MasterIgrometriAPIView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
+
+    def get(self, request, pk):
+        try:
+        # Recupera l'oggetto Igrometro
+            master = MasterIgrometri.objects.get(id=pk)
+        except MasterIgrometri.DoesNotExist:
+            return JsonResponse({'error': 'Il master specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)
+        #voglio ritornare un json con tutte le ultime misurazioni degli igrometri sotto il master
+        igrometri = Igrometro.objects.filter(master=master.id)
+        data = []
+        for igrometro in igrometri:
+            if igrometro.ultima_misurazione is not None:
+                data.append({'id': igrometro.id, 'nome': igrometro.nome, 'misurazioni': igrometro.misurazioni})
+        return JsonResponse({'data': data}, status=status.HTTP_200_OK)        
 
     def post(self, request):
         # Use the existing MasterIgrometriCreateView to handle the request
@@ -191,14 +217,13 @@ def cancella_ultima_misurazione(request, igrometro_id):
 
 
 class CustomAuthToken(APIView):
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         email = request.data.get('email')
         password = request.data.get('password')
-
         user = authenticate(request, email=email, password=password)
 
         if user is not None:
             token, created = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Invalid credentialsss'}, status=status.HTTP_401_UNAUTHORIZED)

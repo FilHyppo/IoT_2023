@@ -10,11 +10,12 @@ class Master:
 
     def get_auth_token(self):
         token_url = self.base_url + 'token/'
-        response = requests.post(token_url, data={'password': self.user.get('password'), 'email': self.user.get('email')})
+        response = requests.get(token_url, data={'password': self.user.get('password'), 'email': self.user.get('email')})
         if response.status_code == 200:
             return response.json().get('token')
         else:
             print(f"Failed to get token. Status code: {response.status_code}")
+            print(response.json())
             return None
 
     def get_current_date(self):
@@ -78,6 +79,12 @@ class Master:
         print(response.status_code)
         print(response.json())
 
+    def get_igrometro(self, id):
+        url = f'igrometri/{id}/'
+        response = self._make_request('GET', url)
+        print(response.status_code)
+        print(response.json())
+
     def crea_master(self, nome, latitudine, longitudine, quota):
         url = 'masterigrometri/'
         data = {'nome': nome, 'latitudine': latitudine, 'longitudine': longitudine, 'quota': quota}
@@ -110,6 +117,11 @@ class Master:
         print(response.status_code)
         print(response.json())
 
+    def get_master(self, id):
+        url = f'masterigrometri/{id}/'
+        response = self._make_request('GET', url)
+        print(response.status_code)
+        print(response.json())
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -119,7 +131,7 @@ if __name__ == '__main__':
     parser.add_argument('--email', type=str, required=False, help='Email for authentication')
 
     parser.add_argument('--model', choices=['igrometro', 'master', 'misurazione'], required=True, help='Select model')
-    parser.add_argument('--method', choices=['create', 'update', 'delete'], required=True, help='Select method')
+    parser.add_argument('--method', choices=['get', 'create', 'update', 'delete'], required=True, help='Select method')
 
     parser.add_argument('--masterID', type=int, required=False, help='Select master id')
     parser.add_argument('--name', type=str, required=False, help='Select name')
@@ -187,5 +199,16 @@ if __name__ == '__main__':
         else:
             print('Model not found')
 
+    elif args.method == 'get':
+        if args.model == 'master':
+            if args.id is None:
+                print('Errore: è necessario specificare --id')
+            else:
+                master.get_master(args.id)
+        elif args.model == 'igrometro':
+            if args.id is None:
+                print('Errore: è necessario specificare --id')
+            else:
+                master.get_igrometro(args.id)
     else:
         print('Method not found')
