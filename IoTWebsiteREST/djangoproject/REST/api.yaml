@@ -9,7 +9,7 @@ info:
 servers:
   - url: http://127.0.0.1:8000/api/
 paths:
-  /igrometri/create/:
+  /igrometri/:
     post:
       summary: Crea un nuovo Igrometro
       operationId: createIgrometro
@@ -27,9 +27,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IgrometroOutput'
+                $ref: '#/components/schemas/Message'
 
-  /masterigrometri/create/:
+  /masterigrometri/:
     post:
       summary: Crea un nuovo Master
       operationId: createMasterIgrometri
@@ -47,9 +47,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MasterOutput'
+                $ref: '#/components/schemas/Message'
 
-  /igrometri/{id}/delete/:
+  /igrometri/{id}/:
     delete:
       summary: Elimina un Igrometro
       operationId: deleteIgrometro
@@ -65,25 +65,7 @@ paths:
       responses:
         '204':
           description: Igrometro eliminato con successo
-
-  /masterigrometri/{id}/delete/:
-    delete:
-      summary: elimina un Master
-      operationId: deleteMasterIgrometri
-      tags:
-        - MasterIgrometri
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: L'ID del Matser da eliminare
-          schema:
-            type: integer
-      responses:
-        '204':
-          description: Master eliminato con successo.
-
-  /igrometri/{id}/update/:
+          
     put:
       summary: Aggiorna un  Igrometro
       operationId: updateIgrometro
@@ -110,7 +92,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/Message'
 
-  /masterigrometri/{id}/update/:
+  /masterigrometri/{id}/:
+    delete:
+      summary: elimina un Master
+      operationId: deleteMasterIgrometri
+      tags:
+        - MasterIgrometri
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: L'ID del Matser da eliminare
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Master eliminato con successo.
+        
     put:
       summary: Aggiornamento di un Master
       operationId: updateMasterIgrometri
@@ -137,12 +135,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/Message'
 
-  /igrometri/aggiungi-ultima-misurazione/:
+
+
+  /igrometri/{id}/misurazioni/:
     post:
       summary: Aggiungi l'ultima misurazione di un Igrometro 
       operationId: aggiungiUltimaMisurazione
       tags:
         - Igrometro
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: L'ID dell'igrometro che inserisce la misurazione 
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -235,10 +242,13 @@ components:
     UltimaMisurazioneInput:
       type: object
       properties:
-        id:
-          type: integer
         ultima_misurazione:
           type: object
+          properties:
+            data:
+              type: string
+            umidita:
+              type: integer
           
     Message:
       type: object
