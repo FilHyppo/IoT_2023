@@ -10,4 +10,4 @@ Lo script in master.py prende i seguenti parametri da linea di comando: [optiona
     9. [--humidity]: umidità della misura rilevata dall'igrometro corrispondente al campo --id
 
 Nota:
-    metodo insert usato solo con i campi --id e --humidity per comunicare la misurazione
+    metodo insert usato solo con i campi --data e --humidity per comunicare la misurazione

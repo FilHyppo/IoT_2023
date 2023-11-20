@@ -1,7 +1,9 @@
 from django.urls import path
 from .views import *
+from rest_framework.authtoken.views import obtain_auth_token
+from allauth.account.views import LoginView, LogoutView
 
-#Se necessario l'id dell'oggetto è contenuto nel json passato, non è presente nell'url
+# Se necessario l'id dell'oggetto è contenuto nel json passato, non è presente nell'url
 
 urlpatterns = [
     path('igrometri/', IgrometroAPIView.as_view(), name='igrometro-api'),
@@ -9,6 +11,8 @@ urlpatterns = [
     path('igrometri/<int:pk>/misurazioni/', misurazioni, name='misurazioni-api'),
     path('masterigrometri/', MasterIgrometriAPIView.as_view(), name='masterigrometri-api'),
     path('masterigrometri/<int:pk>/', MasterIgrometriAPIView.as_view(), name='masterigrometri-api-pk'),
+
+    path('token/', CustomAuthToken.as_view(), name='token-api'),
 ]
 
 """     

@@ -25,7 +25,7 @@ class CustomLoginView(LoginView):
             pass
 
 
-@user_passes_test(is_admin)
+#@user_passes_test(is_admin)
 def lista_master(request):
     masters = MasterIgrometri.objects.all()
     return render(request, 'masters_list.html', {'masters': masters})

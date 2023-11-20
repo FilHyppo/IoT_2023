@@ -6,6 +6,17 @@ today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 URL_BASE = 'http://localhost:8000/api/'
 
 
+def get_auth_token(username, password, email):
+    token_url = URL_BASE + 'token/'
+    response = requests.post(token_url, data={'password': password, 'email': email})
+    if response.status_code == 200:
+        return response.json().get('token')
+    else:
+        print(f"Failed to get token. Status code: {response.status_code}")
+        return None
+
+
+
 def inserisci_misurzione(id, umidita):
     url = f'igrometri/{id}/misurazioni/'
     ultima_misurazione = {'data': today, 'umidita': umidita}
@@ -117,6 +128,10 @@ def main():
     
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('--username', type=str, required=False, help='Username for authentication')
+    parser.add_argument('--password', type=str, required=False, help='Password for authentication')
+    parser.add_argument('--email', type=str, required=False, help='Email for authentication')
+
     parser.add_argument('--model', choices=['igrometro', 'master', 'misurazione'], required=True, help='Select model')
     parser.add_argument('--method', choices=['create', 'update', 'delete'], required=True, help='Select method')
 
@@ -131,6 +146,11 @@ def main():
     parser.add_argument('--humidity', type=float, required=False, help='Select humidity')
 
     args = parser.parse_args()
+
+
+    token = get_auth_token(args.username, args.password, args.email)
+
+    print(token)
 
     if args.method == 'create':
         if args.model == 'igrometro':

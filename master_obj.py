@@ -3,26 +3,39 @@ import datetime
 import argparse
 
 class Master:
-    def __init__(self, base_url='http://localhost:8000/api/'):
+    def __init__(self, base_url='http://localhost:8000/api/', user={'email': 'marco.02.morini@gmail.com', 'password': 'Ciao'}):
         self.base_url = base_url
+        self.user = user
+        self.token = self.get_auth_token()
 
-    def _make_request(self, method, url, data=None):
-        headers = {'Content-type': 'application/json'}
-        response = requests.request(method, self.base_url + url, json=data, headers=headers)
-        return response
+    def get_auth_token(self):
+        token_url = self.base_url + 'token/'
+        response = requests.post(token_url, data={'password': self.user.get('password'), 'email': self.user.get('email')})
+        if response.status_code == 200:
+            return response.json().get('token')
+        else:
+            print(f"Failed to get token. Status code: {response.status_code}")
+            return None
 
     def get_current_date(self):
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+
+    def _make_request(self, method, url, data=None):
+        headers = {'Content-type': 'application/json', 'Authorization': f'Token {self.token}'}
+        response = requests.request(method, self.base_url + url, json=data, headers=headers)
+        return response
+
     def elimina_misurazione(self, id):
         url = f'igrometri/{id}/misurazioni/'
-        headers = {'Content-type': 'application/json'}
 
-        response = requests.delete(self.base_url + url)
+        response = self._make_request('DELETE', url)
 
         print(response.status_code)
-        print(response.json())
-
+        try:
+            print(response.json())
+        except:
+            pass
 
     def inserisci_misurazione(self, id, umidita):
         url = f'igrometri/{id}/misurazioni/'
@@ -101,6 +114,10 @@ class Master:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('--username', type=str, required=False, help='Username for authentication')
+    parser.add_argument('--password', type=str, required=False, help='Password for authentication')
+    parser.add_argument('--email', type=str, required=False, help='Email for authentication')
+
     parser.add_argument('--model', choices=['igrometro', 'master', 'misurazione'], required=True, help='Select model')
     parser.add_argument('--method', choices=['create', 'update', 'delete'], required=True, help='Select method')
 
@@ -115,7 +132,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    master = Master()
+    master = Master(user={'email': args.email, 'password': args.password})
 
     if args.method == 'create':
         if args.model == 'igrometro':

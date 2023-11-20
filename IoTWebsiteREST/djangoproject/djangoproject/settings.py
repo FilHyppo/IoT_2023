@@ -38,12 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django_extensions',
     'REST',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
     'website',    
     'corsheaders',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +61,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'djangoproject.urls'
@@ -70,6 +78,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #'django.contrib.sites.context_processors.current_site',
             ],
         },
     },
@@ -132,3 +141,48 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "https://editor.swagger.io",
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
+AUTH_USER_MODEL = 'REST.CustomUser'
+
+AUTHENTICATION_BACKENDS = [
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Può essere 'none', 'optional', 'mandatory'
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3  # Giorni entro cui confermare l'email
+ACCOUNT_EMAIL_SUBJECT_PREFIX = 'email di verifica'  # Personalizza il prefisso dell'oggetto dell'email
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': 'il_tuo_client_id', #TODO: inserisci il tuo client id
+            'secret': 'il_tuo_secret',
+            'key': '',
+        }
+    },
+    # Configura altri provider se necessario
+}
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'marco.02.morini@gmail.com'
+EMAIL_HOST_PASSWORD = '...'
+
+LOGIN_REDIRECT_URL = '/lista_master/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+SITE_ID = 1  #TODO: Cambia a un ID di sito valido
+
