@@ -25,7 +25,6 @@ def elimina_misurazione(id):
     print(response.status_code)
     print(response.json())
 
-
 def crea_igrometro(master_id, nome, latitudine, longitudine, attivo):
     url = 'igrometri/'
     data = {'master_id': master_id, 'nome': nome, 'latitudine': latitudine, 'longitudine': longitudine, 'attivo': attivo}
@@ -69,8 +68,6 @@ def aggiorna_igrometro(id, master_id = None, nome = None, latitudine = None, lon
     print(response.status_code)
     print(response.json())
 
-
-
 def crea_master(nome, latitudine, longitudine, quota):
     url = 'masterigrometri/'
     data = {'nome': nome, 'latitudine': latitudine, 'longitudine': longitudine, 'quota': quota}
@@ -91,7 +88,6 @@ def elimina_master(id):
         print(response.json())
     except:
         pass
-
 
 def aggiorna_master(id, nome = None, latitudine = None, longitudine = None, quota = None):
     url = f'masterigrometri/{id}/'
