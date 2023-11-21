@@ -1,10 +1,8 @@
 #include <LoRa.h>
-#include <SoilMoisture.h>
+//#include <SoilMoisture.h> // Libreria per leggere i dati dal sensore di umidità del suolo probabilmente non serve
+//#include <Wire.h>  // Libreria per la comunicazione I2C probabilmente non serve
 #include <ArduinoJson.h>
-#include <Wire.h>
-#include <RTClib.h>  //rtc serve per prendere l'ora ttuale, è un modulino da comprare
 
-RTC_DS3231 rtc;
 
 const int soilMoisturePin = A0;  // Pin analogico a cui è collegato il sensore
 
@@ -24,16 +22,6 @@ void setup() {
     while (1);
   }
     Serial.println("Modulo LoRa inizializzato correttamente");
-
-  if (!rtc.begin()) {
-    Serial.println("Impossibile trovare il modulo RTC");
-    while (1);
-  }
-
-  if (rtc.lostPower()) {
-    Serial.println("Il modulo RTC ha perso l'alimentazione, reimpostazione dell'orologio!");
-    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-  }
 
 }
 
@@ -57,7 +45,7 @@ int leggiValoreUmiditaSuolo() {
 
 
 void inviaDatiAlServer(int valoreUmiditaSuolo) {
-  String dataCorrente = getTime(); 
+  String dataCorrente = ""; //sarà il master ad aggiungere l'ora e la data
 
   // Crea un oggetto JSON
   DynamicJsonDocument jsonDocument(128);  // 128 è la dimensione del JSON, l'ho messo piccolo senza saper nè leggere nè scrivere perchè arduino ha poca memoria
@@ -74,20 +62,5 @@ void inviaDatiAlServer(int valoreUmiditaSuolo) {
   LoRa.endPacket();
 
   Serial.println("Dati inviati al server (JSON): " + jsonString);
-}
-
-String getTime() {
-  DateTime now = rtc.now();
-  String formattedTime = String(now.year()) + "-" + padZero(now.month()) + "-" + padZero(now.day()) + " " +
-                         padZero(now.hour()) + ":" + padZero(now.minute()) + ":" + padZero(now.second());
-  return formattedTime;
-}
-
-String padZero(int value) {
-  if (value < 10) {
-    return "0" + String(value);
-  } else {
-    return String(value);
-  }
 }
 
