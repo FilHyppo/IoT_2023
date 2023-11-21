@@ -6,6 +6,17 @@ today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 URL_BASE = 'http://localhost:8000/api/'
 
 
+def get_auth_token(username, password, email):
+    token_url = URL_BASE + 'token/'
+    response = requests.post(token_url, data={'password': password, 'email': email})
+    if response.status_code == 200:
+        return response.json().get('token')
+    else:
+        print(f"Failed to get token. Status code: {response.status_code}")
+        return None
+
+
+
 def inserisci_misurzione(id, umidita):
     url = f'igrometri/{id}/misurazioni/'
     ultima_misurazione = {'data': today, 'umidita': umidita}
@@ -109,12 +120,23 @@ def aggiorna_master(id, nome = None, latitudine = None, longitudine = None, quot
     print(response.status_code)
     print(response.json())
 
+
+def get_master(id):
+    url = f'masterigrometri/{id}/'
+    headers = {'Content-type': 'application/json', }
+    response = requests.get(URL_BASE + url)
+    print(response.status_code)
+    print(response.json())
 def main():
     
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('--username', type=str, required=False, help='Username for authentication')
+    parser.add_argument('--password', type=str, required=False, help='Password for authentication')
+    parser.add_argument('--email', type=str, required=False, help='Email for authentication')
+
     parser.add_argument('--model', choices=['igrometro', 'master', 'misurazione'], required=True, help='Select model')
-    parser.add_argument('--method', choices=['create', 'update', 'delete'], required=True, help='Select method')
+    parser.add_argument('--method', choices=['create', 'update', 'delete', 'get'], required=True, help='Select method')
 
 
     parser.add_argument('--masterID', type=int, required=False, help='Select master id')
@@ -127,6 +149,11 @@ def main():
     parser.add_argument('--humidity', type=float, required=False, help='Select humidity')
 
     args = parser.parse_args()
+
+
+    token = get_auth_token(args.username, args.password, args.email)
+
+    print(token)
 
     if args.method == 'create':
         if args.model == 'igrometro':
@@ -182,6 +209,12 @@ def main():
         else:
             print('Model not found')
 
+        elif args.method == 'get':
+            if args.model == 'master':
+                if args.id is None:
+                    print('Errore: è necessario specificare --id')
+                else:
+                    get_master(args.id, token)
     else:
         print('Method not found') #inutile a rigor di logica
 

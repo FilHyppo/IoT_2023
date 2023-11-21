@@ -9,6 +9,7 @@ django-extensions = "*"
 djangorestframework = "*"
 django-filter = "*"
 django-cors-headers = "*"
+django-allauth = "*"
 
 [dev-packages]
 

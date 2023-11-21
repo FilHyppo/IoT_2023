@@ -1,11 +1,15 @@
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
+from django.contrib.auth import authenticate
 from rest_framework import generics, status
 from .models import *
 from .serializer import IgrometroSerializer, MasterIgrometriSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import authentication_classes, permission_classes, api_view
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
 
 import json
 
@@ -32,6 +36,20 @@ class MasterIgrometriDestroyView(generics.DestroyAPIView):
 
 
 class IgrometroAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        try:
+            igrometro = Igrometro.objects.get(id=pk)
+        except Igrometro.DoesNotExist:
+            return JsonResponse({'error': 'L\'igrometro specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)
+        #voglio ritornare un json con tutte le ultime misurazioni degli igrometri sotto il master
+        data = []
+        if igrometro.ultima_misurazione is not None:
+            data.append({'id': igrometro.id, 'nome': igrometro.nome, 'misurazioni': igrometro.misurazioni})
+        return JsonResponse({'data': data}, status=status.HTTP_200_OK)
+
     def post(self, request):
         # Use the existing MasterIgrometriCreateView to handle the request
         create_view = IgrometroCreateView.as_view()
@@ -82,6 +100,24 @@ class IgrometroAPIView(APIView):
         return JsonResponse(data, status=response.status_code)
 
 class MasterIgrometriAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+    def get(self, request, pk):
+        try:
+        # Recupera l'oggetto Igrometro
+            master = MasterIgrometri.objects.get(id=pk)
+        except MasterIgrometri.DoesNotExist:
+            return JsonResponse({'error': 'Il master specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)
+        #voglio ritornare un json con tutte le ultime misurazioni degli igrometri sotto il master
+        igrometri = Igrometro.objects.filter(master=master.id)
+        data = []
+        for igrometro in igrometri:
+            if igrometro.ultima_misurazione is not None:
+                data.append({'id': igrometro.id, 'nome': igrometro.nome, 'misurazioni': igrometro.misurazioni})
+        return JsonResponse({'data': data}, status=status.HTTP_200_OK)        
+
     def post(self, request):
         # Use the existing MasterIgrometriCreateView to handle the request
         create_view = MasterIgrometriCreateView.as_view()
@@ -134,6 +170,8 @@ class MasterIgrometriAPIView(APIView):
         data = {'message': response.content.decode('utf-8')}
         return JsonResponse(data, status=response.status_code)
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(['POST', 'DELETE'])
 def misurazioni(request, pk):
     try:
@@ -148,7 +186,8 @@ def misurazioni(request, pk):
     else:
         return JsonResponse({'error': 'Metodo non supportato.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(['POST'])
 def aggiungi_ultima_misurazione(request, igrometro_id):
     igrometro = Igrometro.objects.get(id=igrometro_id)
@@ -161,7 +200,8 @@ def aggiungi_ultima_misurazione(request, igrometro_id):
     igrometro.save()
     return JsonResponse({'message': 'Ultima misurazione aggiunta con successo.'}, status=status.HTTP_200_OK)
     
-
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(['DELETE'])
 def cancella_ultima_misurazione(request, igrometro_id):
     igrometro = Igrometro.objects.get(id=igrometro_id)
@@ -174,3 +214,16 @@ def cancella_ultima_misurazione(request, igrometro_id):
     igrometro.ultima_misurazione = igrometro.misurazioni[-1] if len(igrometro.misurazioni) > 0 else None  # Puoi impostare l'ultima misurazione su None se vuoi
     igrometro.save()
     return JsonResponse({'message': 'Ultima misurazione cancellata con successo.'}, status=status.HTTP_200_OK)
+
+
+class CustomAuthToken(APIView):
+    def get(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid credentialsss'}, status=status.HTTP_401_UNAUTHORIZED)
