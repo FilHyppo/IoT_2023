@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Aggiungi Irrigatore</h2>
+  <form method="post" action="{% url 'website:aggiungi_irrigatore' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Aggiungi</button>
+  </form>
+{% endblock %}

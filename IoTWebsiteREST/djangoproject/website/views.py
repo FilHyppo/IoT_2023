@@ -1,10 +1,13 @@
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import user_passes_test
+from django.views import View
+from .forms import IrrigatoreForm
 from REST.models import Igrometro, MasterIgrometri
 from django.urls import reverse_lazy
-
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 def is_admin(user):
     return user.is_authenticated and user.is_staff
@@ -79,3 +82,21 @@ def read_and_average():
             })
 
     return rettangoli_dati_medi
+
+@method_decorator(login_required, name='dispatch')
+class AggiungiIrrigatoreView(View):
+    template_name = 'aggiungi_irrigatore.html'
+
+    def get(self, request):
+        form = IrrigatoreForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = IrrigatoreForm(request.POST)
+        if form.is_valid():
+            irrigatore = form.save(commit=False)
+            irrigatore.user = request.user  # Associa l'irrigatore all'utente corrente
+            irrigatore.save()
+            return redirect('website:lista_master')  # Personalizza l'URL di reindirizzamento
+
+        return render(request, self.template_name, {'form': form})

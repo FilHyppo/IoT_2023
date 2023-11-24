@@ -70,7 +70,7 @@ ROOT_URLCONF = 'djangoproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+#        'DIRS': [os.path.join(BASE_DIR, 'website', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,6 +83,8 @@ TEMPLATES = [
         },
     },
 ]
+
+
 
 WSGI_APPLICATION = 'djangoproject.wsgi.application'
 
@@ -154,7 +156,7 @@ AUTH_USER_MODEL = 'REST.CustomUser'
 AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-
+""" 
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Può essere 'none', 'optional', 'mandatory'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
@@ -186,3 +188,9 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 SITE_ID = 1  #TODO: Cambia a un ID di sito valido
 
+
+ACCOUNT_FORMS = {'signup': 'website.forms.CustomSignupForm'}
+ """
+SITE_ID = 1  #TODO: Cambia a un ID di sito valido
+
+LOGIN_URL = '/accounts/login/'
