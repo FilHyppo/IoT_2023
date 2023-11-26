@@ -12,16 +12,25 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import json
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+with open(os.path.join(BASE_DIR, "secrets.json")) as f:
+    secrets = json.load(f)
+def get_secret(setting, secret=secrets):
+    """Get secret setting or fail with ImproperlyConfigured"""
+    try:
+        return secret[setting]
+    except KeyError:
+        raise ImproperlyConfigured("Set the {} setting".format(setting))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#!+-b-9w9is$qgr#f0mof@m^-zn#33o7-*=prl6qohrjh(tp(b'
+SECRET_KEY = get_secret('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -176,12 +185,15 @@ SOCIALACCOUNT_PROVIDERS = {
     },
     # Configura altri provider se necessario
 }
+ """
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'marco.02.morini@gmail.com'
-EMAIL_HOST_PASSWORD = '...'
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = get_secret('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = get_secret('EMAIL_HOST_PASSWORD')
+
 
 LOGIN_REDIRECT_URL = '/lista_master/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
@@ -190,7 +202,7 @@ SITE_ID = 1  #TODO: Cambia a un ID di sito valido
 
 
 ACCOUNT_FORMS = {'signup': 'website.forms.CustomSignupForm'}
- """
+
 SITE_ID = 1  #TODO: Cambia a un ID di sito valido
 
 LOGIN_URL = '/accounts/login/'

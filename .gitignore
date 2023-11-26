@@ -2,3 +2,4 @@ IoTWebsiteREST/djangoproject/db.sqlite3
 .idea/
 __pycache__
 .vscode/
+secrets.json
