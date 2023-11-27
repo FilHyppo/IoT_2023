@@ -165,16 +165,16 @@ AUTH_USER_MODEL = 'REST.CustomUser'
 AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-""" 
+
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Può essere 'none', 'optional', 'mandatory'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3  # Giorni entro cui confermare l'email
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1  # Giorni entro cui confermare l'email
 ACCOUNT_EMAIL_SUBJECT_PREFIX = 'email di verifica'  # Personalizza il prefisso dell'oggetto dell'email
-
+""" 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
@@ -201,8 +201,7 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 SITE_ID = 1  #TODO: Cambia a un ID di sito valido
 
 
-ACCOUNT_FORMS = {'signup': 'website.forms.CustomSignupForm'}
-
-SITE_ID = 1  #TODO: Cambia a un ID di sito valido
-
+#ACCOUNT_FORMS = {'signup': 'website.forms.CustomSignupForm'}
+#ACCOUNT_SIGNUP_FORM_CLASS = 'website.forms.CustomSignupForm'
+#ACCOUNT_SIGNUP_FORM_CLASS = 'website.forms.CustomSignupForm'
 LOGIN_URL = '/accounts/login/'
