@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-#!+-b-9w9is$qgr#f0mof@m^-zn#33o7-*=prl6qohrjh(tp(b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["postgredjango.ew.r.appspot.com" ,
+                 "127.0.0.1"]
 
 
 # Application definition
@@ -90,12 +91,25 @@ WSGI_APPLICATION = 'djangoproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+        'NAME': 'database_di_prova',
+        'USER': 'prova',
+        'PASSWORD': 'ciao',
+        'PORT': '5432',
     }
 }
+
+
 
 
 # Password validation
@@ -133,7 +147,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = 'static/'
 
+
+# La cartella in cui sono raccolti i file statici durante la raccolta
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Le cartelle che contengono i file statici della tua applicazione
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'website/static'),
+    # Altre cartelle, se presenti
+]
+
 # Default primary key field type
+
+
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -1,6 +1,6 @@
 Implementare comunicazione seriale
 Implementare rete LORA
- ==> Creazione di un bridge completo(metà già fatto con Master), manca parte che prene i dati
+ ==> Creazione di un bridge completo(metà già fatto con Master), manca parte che prende i dati
 
 Client/Irrigatori (uso dei dati in cloud per irrigazione)
  ==> Creazione di un client che si interfaccia con il server e riceve i dati per l'irrigazione

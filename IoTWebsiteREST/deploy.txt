@@ -1,0 +1,16 @@
+#####DEPLOY#########
+
+gcloud config set project postgredjango
+gcloud config set project postgredjango
+gcloud app deploy
+
+
+#####LOCALE#########
+
+è necessario un proxy per accedere al database in cloud  https://cloud.google.com/sql/docs/mysql/connect-instance-auth-proxy?hl=it
+
+crea file cloud-sql-proxy.x64.exe  
+.\cloud-sql-proxy.x64.exe postgredjango:us-central1:prova
+python.exe .\manage.py runserver
+
+
