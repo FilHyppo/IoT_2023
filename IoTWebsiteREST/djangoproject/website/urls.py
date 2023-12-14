@@ -10,4 +10,6 @@ urlpatterns = [
     path('mappa_aree/', mappa_aree, name='mappa_aree'),
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path("logout/", views.custom_logout, name="logout"),
+
+    path('aggiungi_irrigatore/', AggiungiIrrigatoreView.as_view(), name='aggiungi_irrigatore'),
 ]

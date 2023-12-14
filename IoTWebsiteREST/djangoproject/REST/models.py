@@ -51,7 +51,7 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=30, blank=True, null=True)
+    username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     is_active = models.BooleanField(default=True)
@@ -59,8 +59,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    EMAIL_FIELD = 'email'
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
 
 # Override the groups field
     groups = models.ManyToManyField(
@@ -84,3 +85,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
     
+
+#Creare modello per irrigatore con foreign key a CustomUser
+class Irrigatore(models.Model):
+    user = models.ForeignKey('CustomUser', on_delete=models.CASCADE, null = False, related_name='irrigatori')
+
+    id = models.AutoField(primary_key=True)
+    nome = models.CharField(max_length=100)
+    latitudine = models.FloatField()
+    longitudine = models.FloatField()
+    data_creazione = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    quota = models.FloatField()
+
+    attivo = models.BooleanField(default=True)

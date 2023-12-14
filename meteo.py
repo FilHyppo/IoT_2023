@@ -53,5 +53,5 @@ class PrevisioneMeteo:
 
 if __name__=="__main__":
     previsioni=PrevisioneMeteo(44.72, 10.97)
-    print(previsioni.get_info("2023-11-28", "21:00"))
-    print(previsioni.get_info_all())
+    print(previsioni.get_info("2023-11-22", "11:00"))
+    #print(previsioni.get_info_all())

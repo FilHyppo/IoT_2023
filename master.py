@@ -120,13 +120,6 @@ def aggiorna_master(id, nome = None, latitudine = None, longitudine = None, quot
     print(response.status_code)
     print(response.json())
 
-
-def get_master(id):
-    url = f'masterigrometri/{id}/'
-    headers = {'Content-type': 'application/json', }
-    response = requests.get(URL_BASE + url)
-    print(response.status_code)
-    print(response.json())
 def main():
     
     parser = argparse.ArgumentParser()
@@ -136,7 +129,7 @@ def main():
     parser.add_argument('--email', type=str, required=False, help='Email for authentication')
 
     parser.add_argument('--model', choices=['igrometro', 'master', 'misurazione'], required=True, help='Select model')
-    parser.add_argument('--method', choices=['create', 'update', 'delete', 'get'], required=True, help='Select method')
+    parser.add_argument('--method', choices=['create', 'update', 'delete'], required=True, help='Select method')
 
 
     parser.add_argument('--masterID', type=int, required=False, help='Select master id')
@@ -209,12 +202,6 @@ def main():
         else:
             print('Model not found')
 
-        elif args.method == 'get':
-            if args.model == 'master':
-                if args.id is None:
-                    print('Errore: è necessario specificare --id')
-                else:
-                    get_master(args.id, token)
     else:
         print('Method not found') #inutile a rigor di logica
 

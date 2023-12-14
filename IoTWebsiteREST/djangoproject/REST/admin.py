@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Igrometro, MasterIgrometri
+from .models import Igrometro, MasterIgrometri, Irrigatore, CustomUser
 
 # Register your models here.
 
@@ -12,3 +12,5 @@ class IgrometroAdmin(admin.ModelAdmin):
 
 admin.site.register(MasterIgrometri, MasterIgrometriAdmin)
 admin.site.register(Igrometro, IgrometroAdmin)
+admin.site.register(CustomUser)
+admin.site.register(Irrigatore)
