@@ -3,14 +3,18 @@ import datetime
 import argparse
 
 class Master:
-    def __init__(self, base_url='http://localhost:8000/api/', user={'email': 'marco.02.morini@gmail.com', 'password': 'Ciao'}):
+    #make user param optional
+    def __init__(self, user, base_url='http://localhost:8000/api/'):
         self.base_url = base_url
         self.user = user
+        if user.get('password') is None or (user.get('username') is None and user.get('email') is None):
+            raise Exception('Errore: è necessario specificare password e almeno uno tra email o username')
         self.token = self.get_auth_token()
 
     def get_auth_token(self):
         token_url = self.base_url + 'token/'
-        response = requests.get(token_url, data={'password': self.user.get('password'), 'email': self.user.get('email')})
+        response = requests.get(token_url, data={'password': self.user.get('password'), 'email': self.user.get('email'), 'username': self.user.get('username')})
+        print({'password': self.user.get('password'), 'email': self.user.get('email'), 'username': self.user.get('username')})
         if response.status_code == 200:
             return response.json().get('token')
         else:
@@ -144,7 +148,10 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    master = Master(user={'email': args.email, 'password': args.password})
+    email = args.email if args.email is not None else 'admin@admin.com'
+    password = args.password if args.password is not None else 'admin'
+    username = args.username if args.username is not None else 'admin'
+    master = Master(user={'email': email, 'password': password, 'username': username})
 
     if args.method == 'create':
         if args.model == 'igrometro':

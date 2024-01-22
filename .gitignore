@@ -1,5 +1,5 @@
 IoTWebsiteREST/djangoproject/db.sqlite3
 .idea/
-__pycache__
 .vscode/
 IoTWebsiteREST/djangoproject/secrets.json
+IoTWebsiteREST/djangoproject/djangoproject/__pycache__/
