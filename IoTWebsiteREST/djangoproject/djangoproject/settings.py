@@ -79,7 +79,7 @@ ROOT_URLCONF = 'djangoproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-#        'DIRS': [os.path.join(BASE_DIR, 'website', 'templates')],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -168,9 +168,12 @@ AUTHENTICATION_BACKENDS = [
 
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Può essere 'none', 'optional', 'mandatory'
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_REQUIRED = True #Se l'utente è obbligato a fornire l'email quando si registra
+ACCOUNT_USERNAME_REQUIRED = True #Se l'utente è obbligato a fornire l'username quando si registra
+##Da tenere entrambe a True altrimenti non visualizzate nei form di signup e login
+
 
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1  # Giorni entro cui confermare l'email
 ACCOUNT_EMAIL_SUBJECT_PREFIX = 'email di verifica'  # Personalizza il prefisso dell'oggetto dell'email
@@ -200,8 +203,17 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 SITE_ID = 1  #TODO: Cambia a un ID di sito valido
 
+    
+#Per modificare i form di allauth volendo
+ACCOUNT_FORMS = {
+    'add_email': 'allauth.account.forms.AddEmailForm',
+    'change_password': 'allauth.account.forms.ChangePasswordForm',
+    'login': 'allauth.account.forms.LoginForm',
+    'reset_password': 'allauth.account.forms.ResetPasswordForm',
+    'reset_password_from_key': 'allauth.account.forms.ResetPasswordKeyForm',
+    'set_password': 'allauth.account.forms.SetPasswordForm',
+    'signup': 'allauth.account.forms.SignupForm',
+    'user_token': 'allauth.account.forms.UserTokenForm',
+}
 
-#ACCOUNT_FORMS = {'signup': 'website.forms.CustomSignupForm'}
-#ACCOUNT_SIGNUP_FORM_CLASS = 'website.forms.CustomSignupForm'
-#ACCOUNT_SIGNUP_FORM_CLASS = 'website.forms.CustomSignupForm'
-LOGIN_URL = '/accounts/login/'
+#LOGIN_URL = '/accounts/login/'

@@ -18,9 +18,11 @@
                     <li><a href="#">Azione2</a></li>
                     <li><a href="{% url 'website:logout' %}">Logout</a></li>
                 {% else %}
-                    {% if not 'login' in request.path %}
-                        <li><a href="{% url 'website:login' %}" class="nav__link">Login</a></li>
-                    {% endif %}
+                    {% comment %} {% if not 'login' in request.path %}
+                        <li><a href="{% url 'account_login' %}" class="nav__link">Login</a></li>
+                    {% endif %} {% endcomment %}
+                    <li><a href="{% url 'account_login' %}" class="nav__link">Login</a></li>
+                    <li><a href="{% url 'account_signup' %}" class="nav__link">Registrati</a></li>
                 {% endif %}
             </ul>
         </nav>
