@@ -8,8 +8,9 @@ urlpatterns = [
     # Altri percorsi e viste possono essere aggiunti qui
     path('lista_master/', lista_master, name='lista_master'),
     path('mappa_aree/', mappa_aree, name='mappa_aree'),
+    path('homepage/', homepage, name='homepage'),
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path("logout/", views.custom_logout, name="logout"),
-
+    path('search/', MasterIgrometriSearchView.as_view(), name='search-view'),
     path('aggiungi_irrigatore/', AggiungiIrrigatoreView.as_view(), name='aggiungi_irrigatore'),
 ]

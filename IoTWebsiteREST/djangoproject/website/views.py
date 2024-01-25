@@ -37,6 +37,8 @@ def lista_master(request):
 def mappa_aree(request):
     return render(request, 'mappa.html', {'sensors': read_and_average()})
 
+def homepage(request):
+    return render(request, 'homepage.html', )
 
 def read_and_average():
     # Ottenere tutti i dati degli igrometri
@@ -100,3 +102,69 @@ class AggiungiIrrigatoreView(View):
             return redirect('website:lista_master')  # Personalizza l'URL di reindirizzamento
 
         return render(request, self.template_name, {'form': form})
+
+
+# views.py
+from django.http import JsonResponse
+from django.views import View
+
+from django.http import JsonResponse
+from django.views import View
+
+
+class MasterIgrometriSearchView(View):
+    def get(self, request, *args, **kwargs):
+        search_name = request.GET.get('searchName', '')
+        type = request.GET.get('type', '')
+        
+        print(type)
+
+        if type == "Master":
+            masters_queryset = MasterIgrometri.objects.all()
+            igrometri_queryset = []
+            
+        elif type == "Hygrometer":
+            masters_queryset = []
+            igrometri_queryset = Igrometro.objects.all()
+        else:
+            masters_queryset = MasterIgrometri.objects.all()
+            igrometri_queryset = Igrometro.objects.all()
+    
+        if search_name:
+            masters_queryset = masters_queryset.filter(nome__icontains=search_name) if len(masters_queryset)!=0 else []
+            igrometri_queryset = igrometri_queryset.filter(nome__icontains=search_name) if len(igrometri_queryset)!=0  else []
+
+        masters_data = []
+        for master in masters_queryset:
+            master_data = {
+                'id': master.id,
+                'nome': master.nome,
+                'latitudine': master.latitudine,
+                'longitudine': master.longitudine,
+                'data_creazione': master.data_creazione,
+                'quota': master.quota,
+            }
+            masters_data.append(master_data)
+
+        igrometri_data = []
+        for igrometro in igrometri_queryset:
+            igrometro_data = {
+                'id': igrometro.id,
+                'nome': igrometro.nome,
+                'latitudine': igrometro.latitudine,
+                'longitudine': igrometro.longitudine,
+                'data_creazione': igrometro.data_creazione,
+                'ultima_misurazione': igrometro.ultima_misurazione,
+                'misurazioni': igrometro.misurazioni,
+                'attivo': igrometro.attivo,
+                'master_id': igrometro.master_id,
+            }
+            igrometri_data.append(igrometro_data)
+
+        result_dict = {
+            'masters': masters_data,
+            'igrometri': igrometri_data
+        }
+        print(result_dict)
+        return JsonResponse(result_dict, safe=False)
+
