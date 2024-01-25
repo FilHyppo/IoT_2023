@@ -1,9 +1,9 @@
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import user_passes_test
 from django.views import View
-from .forms import IrrigatoreForm
+from .forms import IgrometroForm, IrrigatoreForm, MasterForm
 from REST.models import Igrometro, MasterIgrometri
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -116,23 +116,38 @@ class MasterIgrometriSearchView(View):
     def get(self, request, *args, **kwargs):
         search_name = request.GET.get('searchName', '')
         type = request.GET.get('type', '')
-        
-        print(type)
+        id = request.GET.get('id', '')
+
+
+        masters_queryset = MasterIgrometri.objects.all()
+        igrometri_queryset = Igrometro.objects.all()
+        if id:
+            try:
+                id = int(id)
+                master_instance = MasterIgrometri.objects.get(id=id)
+                masters_queryset = [master_instance]
+            except (ValueError, MasterIgrometri.DoesNotExist):
+                masters_queryset = []
+            try:
+                id = int(id)
+                igrometro_instance = Igrometro.objects.get(id=id)
+                igrometri_queryset = [igrometro_instance]
+            except (ValueError, MasterIgrometri.DoesNotExist):
+                igrometri_queryset = []
+
+
+
 
         if type == "Master":
-            masters_queryset = MasterIgrometri.objects.all()
             igrometri_queryset = []
             
         elif type == "Hygrometer":
             masters_queryset = []
-            igrometri_queryset = Igrometro.objects.all()
-        else:
-            masters_queryset = MasterIgrometri.objects.all()
-            igrometri_queryset = Igrometro.objects.all()
+
     
         if search_name:
-            masters_queryset = masters_queryset.filter(nome__icontains=search_name) if len(masters_queryset)!=0 else []
-            igrometri_queryset = igrometri_queryset.filter(nome__icontains=search_name) if len(igrometri_queryset)!=0  else []
+            masters_queryset = [master for master in masters_queryset if search_name.lower() in master.nome.lower()]
+            igrometri_queryset = [igro for igro in igrometri_queryset if search_name.lower() in igro.nome.lower()]
 
         masters_data = []
         for master in masters_queryset:
@@ -165,6 +180,33 @@ class MasterIgrometriSearchView(View):
             'masters': masters_data,
             'igrometri': igrometri_data
         }
-        print(result_dict)
         return JsonResponse(result_dict, safe=False)
+    
+
+def igrometro_detail_and_edit(request, igrometro_id):
+    igrometro = get_object_or_404(Igrometro, id=igrometro_id)
+    if request.method == 'POST':
+        form = IgrometroForm(request.POST, instance=igrometro)
+        if form.is_valid():
+            form.save()
+            return render(request, 'igrometro.html', {'igrometro': igrometro, 'form': form})
+    else:
+        form = IgrometroForm(instance=igrometro)
+
+    return render(request, 'igrometro.html', {'igrometro': igrometro, 'form': form})
+
+
+def master_detail_and_edit(request, master_id):
+    master = get_object_or_404(MasterIgrometri, id=master_id)
+    igrometri = Igrometro.objects.filter(master=master)
+    print(igrometri)
+    if request.method == 'POST':
+        form = MasterForm(request.POST, instance=master)
+        if form.is_valid():
+            form.save()
+            return render(request, 'master.html', {'master': master, 'form': form , 'igrometri':igrometri})
+    else:
+        form = MasterForm(instance=master)
+
+    return render(request, 'master.html', {'master': master, 'form': form, 'igrometri':igrometri})
 

@@ -23,7 +23,8 @@
         <!-- Header End -->
 
 <!-- Search Start -->
-<div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
+<div class="container-xxl py-5" style="width: 100%; padding-left: 0px; padding-right: 0px;padding-top: 0px !important; background-color: #0b5966 !important;"></div>
+<div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px; background-color: #1f414d !important; margin-top: -42px;">
     <div class="container">
         <div class="row g-2">
             <div class="col-md-10">
@@ -32,37 +33,44 @@
                         <input type="text" class="form-control border-0 py-3" placeholder="Search name">
                     </div>
                     <div class="col-md-4">
+                        <input type="text" class="form-control border-0 py-3"  id="id" placeholder="ID">
+                    </div>
+                    <div class="col-md-4">
                         <select class="form-select border-0 py-3" id="type">
                             <option selected>Type</option>
                             <option value="Master">Master</option>
                             <option value="Hygrometer">Hygrometer</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <select class="form-select border-0 py-3">
-                            <option selected>Location</option>
-                            <option value="1">Location 1</option>
-                            <option value="2">Location 2</option>
-                            <option value="3">Location 3</option>
-                        </select>
-                    </div>
+                   
                 </div>
             </div>
             <div class="col-md-2">
-                <button class="btn btn-dark border-0 w-100 py-3">Search</button>
+                <button class="btn btn-dark border-0 w-100 py-3" style="background-color: #377c85 !important;" onclick="changeBackgroundColor()">Search</button>
             </div>
         </div>
     </div>
 </div>
+</div>
+<script>
+    function changeBackgroundColor() {
+        var button = document.querySelector('.btn-dark');
+        
+        // Cambia il colore di sfondo quando il bottone viene cliccato
+        button.style.backgroundColor = '#349c85';
+
+        // Ripristina il colore di sfondo originale dopo 500 millisecondi (mezzo secondo)
+        setTimeout(function() {
+            button.style.backgroundColor = '#377c85'; // Imposta il colore di sfondo a quello predefinito
+        }, 500);
+    }
+</script>
 <!-- Search End -->
-<div class="container-fluid header bg-white p-0">
-
-
-    <h1 style="margin-top: 500px;">Master e Igrometri sulla Mappa </h1>
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="bg-light rounded p-1" style="background-color: #6594a67e !important;">
-                <div id="map" style="height: 400px; width: 100%;"></div>
+<div class="container-fluid header bg-white p-0" style="margin-top: -50px; padding-left: 0px; background-color: transparent !important ;">
+    <div class="container-xxl py-5" style="width: 100%; padding-left: 0px; padding-right: 0px; padding-top: 0px !important;">
+        <div class="container" style="width: 100%; padding-left: 0px; padding-right: 0px;">
+            <div class="bg-light  p-1" style="background-color: #0b5966 !important; width: 100%; padding-left: 0px !important; padding-right: 0px !important; padding-top: 8px !important; padding-bottom: 8px !important;">
+                <div id="map" style="height: 450px; width: 100%;"></div>
             </div>
             
         </div>
@@ -83,6 +91,10 @@
 
     <!-- Template Javascript -->
     <script src='{% static "js/main.js" %}'></script>
+
+    <div id="search-results" class="container py-5" style="margin-top: -50px; background-color: white;padding-top: 20px !important">
+        <!-- Qui verranno aggiunti dinamicamente i risultati della ricerca -->
+    </div>
 {% endblock %}
 
 {% block scripts %}
@@ -97,6 +109,12 @@
         var igrometroIcon = L.icon({
             iconUrl: '{% static "img/marker.png" %}',
             iconSize: [20, 22],
+            iconAnchor: [22, 64],
+            popupAnchor: [-3, -76],
+        });
+        var newIcon = L.icon({
+            iconUrl: '{% static "img/marker3.png" %}',
+            iconSize: [38, 45],
             iconAnchor: [22, 64],
             popupAnchor: [-3, -76],
         });
@@ -131,11 +149,11 @@
             // Recupera i valori di ricerca
             var searchName = $('input').val();
             var type = $('select#type').val();
-            var location = $('select#location').val();
+            var id = $('#id').val();
 
             console.log(searchName);
             console.log(type);
-
+            console.log(id);
 
             // Invia la richiesta Ajax
             $.ajax({
@@ -144,7 +162,7 @@
                 data: {
                     searchName: searchName,
                     type: type,
-                    location: location
+                    id: id
                 },
                 success: function(data) {
                     // Aggiorna la variabile masters con i nuovi risultati ottenuti
@@ -163,16 +181,14 @@
             .bindPopup("Nome: " + master.nome + "<br>ID: " + master.id)
             .addTo(map);
             
-                    
-       
-    }); 
+                    }); 
     data["igrometri"].forEach(function(igrometro) {
     L.marker([igrometro.latitudine, igrometro.longitudine], {icon: igrometroIcon, id: 'igrometro_' + igrometro.id})
                     .bindPopup("Nome: " + igrometro.nome + "<br>ID: " + igrometro.id)
                     .addTo(map);
                 }); 
                 updateSearchResults(data)
-                    console.log(data)
+            
                     // Aggiorna la mappa con i nuovi dati
                     
                 },
@@ -202,16 +218,14 @@
 
 <!-- ... (parte del tuo codice) ... -->
 
-<div class="container-fluid header bg-white p-0">
+
     <!-- ... (altro contenuto) ... -->
 
     <!-- Risultati della ricerca -->
-    <div id="search-results" class="container py-5">
-        <!-- Qui verranno aggiunti dinamicamente i risultati della ricerca -->
-    </div>
+    
 
     <!-- ... (altra parte del tuo codice) ... -->
-</div>
+
 
 <script>
     // Funzione per aggiornare la sezione dei risultati della ricerca
@@ -224,95 +238,146 @@
 
         // Aggiungi i nuovi blocchi per ogni risultato
         data["masters"].forEach(function(master) {
-            console.log("ao");
             var masterBlock = createResultBlock('Master', master);
             resultsContainer.appendChild(masterBlock);
+
+            var pulsante = document.getElementById(master.nome + '_' + master.id);      
+            pulsante.addEventListener('click', function() {
+        map.eachLayer(function(layer) {
+                map.removeLayer(layer);
+            });
+        
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        data["masters"].forEach(function(master) {
+        L.marker([master.latitudine, master.longitudine], {id: 'master_' + master.id})
+            .bindPopup("Nome: " + master.nome + "<br>ID: " + master.id)
+            .addTo(map);
+            
+                    }); 
+    data["igrometri"].forEach(function(igrometro) {
+    L.marker([igrometro.latitudine, igrometro.longitudine], {icon: igrometroIcon, id: 'igrometro_' + igrometro.id})
+                    .bindPopup("Nome: " + igrometro.nome + "<br>ID: " + igrometro.id)
+                    .addTo(map);
+                }); 
+        // Rimuovi il vecchio marker
+        map.eachLayer(function(layer) {
+            if (layer.options.id === 'master_' + master.id) {
+                map.removeLayer(layer);
+            }
         });
-        console.log("asg");
-        console.log(data);
+
+        // Centra la mappa sulla posizione del nuovo marker
+         // Centra la mappa sulla posizione del nuovo marker
+         map.flyTo([master.latitudine, master.longitudine], 15, {
+    duration: 2, // Durata dell'animazione in secondi (personalizzala secondo le tue esigenze)
+    easeLinearity: 0.25, // Controllo della velocità di animazione
+    noMoveStart: true // Evita che l'animazione venga scatenata da un evento move
+});
+
+        // Aggiungi il nuovo marker
+        var newMarker = L.marker([master.latitudine, master.longitudine], {icon: newIcon, id: 'master_' + master.id})
+            .bindPopup("Nome: " + master.nome + "<br>ID: " + master.id)
+            .addTo(map);
+    });
+
+        });
+
         data["igrometri"].forEach(function(igrometro) {
-            var igrometroBlock = createResultBlock('Hygrometer', igrometro);
-            console.log("ciao");
-            resultsContainer.appendChild(igrometroBlock);
+    var igrometroBlock = createResultBlock('Hygrometer', igrometro);
+    resultsContainer.appendChild(igrometroBlock);
+
+    var pulsante = document.getElementById(igrometro.nome + '_' + igrometro.id);      
+
+    pulsante.addEventListener('click', function() {
+        map.eachLayer(function(layer) {
+                map.removeLayer(layer);
+            });
+        
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        data["masters"].forEach(function(master) {
+        L.marker([master.latitudine, master.longitudine], {id: 'master_' + master.id})
+            .bindPopup("Nome: " + master.nome + "<br>ID: " + master.id)
+            .addTo(map);
+            
+                    }); 
+    data["igrometri"].forEach(function(igrometro) {
+    L.marker([igrometro.latitudine, igrometro.longitudine], {icon: igrometroIcon, id: 'igrometro_' + igrometro.id})
+                    .bindPopup("Nome: " + igrometro.nome + "<br>ID: " + igrometro.id)
+                    .addTo(map);
+                }); 
+        // Rimuovi il vecchio marker
+        map.eachLayer(function(layer) {
+            if (layer.options.id === 'igrometro_' + igrometro.id) {
+                map.removeLayer(layer);
+            }
         });
+
+        // Centra la mappa sulla posizione del nuovo marker
+        map.flyTo([igrometro.latitudine, igrometro.longitudine], 15, {
+    duration: 2, // Durata dell'animazione in secondi (personalizzala secondo le tue esigenze)
+    easeLinearity: 0.25, // Controllo della velocità di animazione
+    noMoveStart: true // Evita che l'animazione venga scatenata da un evento move
+});
+
+        // Aggiungi il nuovo marker
+        var newMarker = L.marker([igrometro.latitudine, igrometro.longitudine], {icon: newIcon, id: 'igrometro_' + igrometro.id})
+            .bindPopup("Nome: " + igrometro.nome + "<br>ID: " + igrometro.id)
+            .addTo(map);
+    });
+
+        });
+          // Aggiungi un listener per il click su ogni blocco risultato
+          
+  
     }
 
     // Funzione per creare un blocco risultato
     function createResultBlock(type, data) {
-        var block = document.createElement('div');
-        block.className = 'result-block card mb-3';
+    var block = document.createElement('div');
+    block.className = 'result-block card mb-1';
 
-        // Creare l'intestazione del blocco
-        var header = document.createElement('div');
-        header.className = 'card-header';
-        header.innerHTML = '<h3 class="mb-0">' + data.nome + '</h3>';
-        block.appendChild(header);
+    // Aggiungi stili CSS per cambiare colore, rimuovere gli angoli arrotondati e aggiungere l'ombreggiatura
+    block.style.backgroundColor = '#d7e7ff'; // Cambia il colore come preferisci
+    block.style.borderRadius = '0'; // Rimuovi gli angoli arrotondati
+    block.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)'; // Aggiungi l'ombreggiatura
 
-        // Creare il corpo del blocco
-        var body = document.createElement('div');
-        body.className = 'card-body';
+    // Creare l'intestazione del blocco
+    var header = document.createElement('div');
+    header.className = 'card-header d-flex justify-content-between align-items-center';
 
-        // Aggiungi le informazioni specifiche al corpo del blocco
-        if (type === 'Master') {
-            body.innerHTML = '<p>ID: ' + data.id + '</p>' +
-                             '<p>Latitudine: ' + data.latitudine + '</p>' +
-                             '<p>Longitudine: ' + data.longitudine + '</p>' +
-                             '<p>Data Creazione: ' + data.data_creazione + '</p>' +
-                             '<p>Quota: ' + data.quota + '</p>';
-        } else if (type === 'Hygrometer') {
-            body.innerHTML = '<p>ID: ' + data.id + '</p>' +
-                             '<p>Latitudine: ' + data.latitudine + '</p>' +
-                             '<p>Longitudine: ' + data.longitudine + '</p>' +
-                             '<p>Data Creazione: ' + data.data_creazione + '</p>' +
-                             '<p>Ultima Misurazione: ' + data.ultima_misurazione + '</p>' +
-                             '<p>Misurazioni: ' + data.misurazioni + '</p>' +
-                             '<p>Attivo: ' + data.attivo + '</p>' +
-                             '<p>Master ID: ' + data.master_id + '</p>';
-        }
+    // Aggiungi ID, Latitudine, Longitudine e Nome in orizzontale
+    header.innerHTML = '<div class="d-flex flex-column">' +
+        '<btn  id=' + data.nome + '_' + data.id + ' class="btn btn-primary px-3 d-none d-lg-flex">View</btn>' +
+        '</div>' +
+        '<div class="d-flex flex-column">' +
+        '<span>ID: ' + data.id + '</span>' +
+        '</div>' +
+        '<div class="d-flex flex-column">' +
+        '<span>Type: ' + type + '</span>' +
+        '</div>' +
+        '<div class="d-flex flex-column">' +
+        '<span>Name: ' + data.nome + '</span>' +
+        '</div>' +
+        '<div class="d-flex flex-column">' +
+        '<span>Lat: ' + data.latitudine + '</span>' +
+        '</div>' +
+        '<div class="d-flex flex-column">' +
+        '<span>Long: ' + data.longitudine + '</span>' +
+        '</div>' +
+        '<div class="d-flex flex-column">' +
+        '<a href="' + (type === 'Hygrometer' ? '/hygrometer/' : '/master/') + data.id + '" class="btn btn-primary px-3 d-none d-lg-flex">Details</a>' +
+        '</div>';
 
-        // Aggiungi il corpo al blocco
-        block.appendChild(body);
+    block.appendChild(header);
 
-     // Aggiungi il pulsante per aprire/chiudere il blocco
-var collapseBtn = document.createElement('button');
-collapseBtn.className = 'btn btn-link btn-block text-left';
-collapseBtn.type = 'button';
-collapseBtn.setAttribute('data-bs-toggle', 'collapse');
-collapseBtn.setAttribute('data-bs-target', '#collapse-' + data.id);
-collapseBtn.setAttribute('aria-expanded', 'false');
-collapseBtn.setAttribute('aria-controls', 'collapse-' + data.id);
-collapseBtn.innerHTML = 'Mostra Dettagli';
+    return block;
+}
 
-// Aggiungi un gestore di eventi 'click' al pulsante
-collapseBtn.addEventListener('click', function() {
-    // Cambia il testo del pulsante quando viene cliccato
-    collapseBtn.innerText = collapseBtn.innerText === 'Mostra Dettagli' ? 'Nascondi Dettagli' : 'Mostra Dettagli';
 
-    // Recupera il target della tendina
-    var collapseTarget = $('#collapse-' + data.id);
-
-    // Controlla se la tendina è attualmente aperta o chiusa
-    var isCollapsed = collapseTarget.hasClass('show');
-
-    // Se la tendina è stata aperta, modifica il testo del pulsante
-    if (!isCollapsed) {
-        collapseBtn.innerText = 'Nascondi Dettagli';
-    }
-});
-
-body.appendChild(collapseBtn);
-
-// Aggiungi il div di dettagli nascosto
-var collapseDiv = document.createElement('div');
-collapseDiv.className = 'collapse';
-collapseDiv.id = 'collapse-' + data.id;
-collapseDiv.innerHTML = 'Dettagli aggiuntivi qui...';
-
-body.appendChild(collapseDiv);
-
-return block;
-
-    }
 </script>
 
 <!-- ... (altro codice JavaScript) ... -->
