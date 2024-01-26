@@ -89,6 +89,12 @@ class Master:
         print(response.status_code)
         print(response.json())
 
+    def get_igrometro_by_name(self, name):
+        url = f'igrometri/?name={name}'
+        response = self._make_request('GET', url)
+        print(response.status_code)
+        print(response.json())
+
     def crea_master(self, nome, latitudine, longitudine, quota):
         url = 'masterigrometri/'
         data = {'nome': nome, 'latitudine': latitudine, 'longitudine': longitudine, 'quota': quota}

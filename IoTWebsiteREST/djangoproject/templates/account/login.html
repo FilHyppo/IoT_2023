@@ -1,4 +1,41 @@
 {% extends "base.html" %}
+{% load static %}
+{% block head %}
+<style>
+    /* Stile per la barra di scorrimento */
+    .scrollable-container {
+        overflow: auto;
+        max-height: 300px; /* Imposta un'altezza massima per la visualizzazione della scrollbar */
+        border: 0px solid #ccc; /* Opzionale: bordo per migliorare la visualizzazione */
+        padding: 10px; /* Opzionale: spazio interno per una migliore presentazione */
+    }
+    .scrollable-container::-webkit-scrollbar {
+            width: 12px;
+        }
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background-color: #1f414d;
+            border-radius: 10px;
+        }
+        .scrollable-container::-webkit-scrollbar-track {
+            background-color: #377c85;
+            border-radius: 10px;
+        }
+    table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+</style>
+<link href='{% static "css/forms.css" %}' rel="stylesheet">'
+{% endblock %}
 {% block content %}
   <div class="container mt-5">
     <div class="row justify-content-center">
