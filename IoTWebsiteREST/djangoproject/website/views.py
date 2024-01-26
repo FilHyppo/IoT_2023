@@ -18,16 +18,6 @@ def custom_logout(request):
     return render(request, 'registration/logout.html')
 
 
-class CustomLoginView(LoginView):
-    def get_success_url(self):
-        user = self.request.user
-
-        if user.is_staff:
-            return reverse_lazy('website:lista_master')
-        else:
-            pass
-
-
 #@user_passes_test(is_admin)
 def lista_master(request):
     masters = MasterIgrometri.objects.all()
