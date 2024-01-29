@@ -1,6 +1,6 @@
 Lo script in master.py prende i seguenti parametri da linea di comando: [optional]
-    1. --method: ['create', 'update', 'delete', 'insert']
-    2. --model: ['igrometro', 'master']
+    1. --method: ['create', 'update', 'delete']
+    2. --model: ['igrometro', 'master', 'misurazione']
     3. [--masterID]: usato solo dagli igrometri per riferirsi al loro master
     4. [--id]: id dell'elemento a cui facciamo riferimento
     5. [--name]: nome dell'elemento
@@ -9,5 +9,18 @@ Lo script in master.py prende i seguenti parametri da linea di comando: [optiona
     8. [--alt]: altitudine del master (non ancora presente in ingrometro)
     9. [--humidity]: umidità della misura rilevata dall'igrometro corrispondente al campo --id
 
-Nota:
-    metodo insert usato solo con i campi --data e --humidity per comunicare la misurazione
+ESEMPI UTILIZZO:
+
+###CREAZIONE IGROMETRO###
+python.exe  .\master_obj.py  --method create --model igrometro --lat 1 --lon 1 --masterID 1 --name prova --username lorenzocorradi01 --password Ciao123! --email lorenzocorradi01@gmail.com
+
+###INSERIMENTO MISURAZIONE###
+python.exe  master_obj.py   --model misurazione --id 81 --humidity 20 --username lorenzocorradi01 --method create --password Ciao123! --email lorenzocorradi01@gmail.com
+
+###AGGIORNAMENTO IGROMETRO###
+python.exe  .\master_obj.py  --method update  --model igrometro --id 81  --lat 4 --username lorenzocorradi01 --password Ciao123! --email lorenzocorradi01@gmail.com
+
+
+
+
+

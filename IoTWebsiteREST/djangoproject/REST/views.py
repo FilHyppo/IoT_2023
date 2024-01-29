@@ -46,7 +46,15 @@ class IgrometroAPIView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, pk):
+    def get(self, request, pk=None):
+        if pk is None:
+            name = request.GET.get('name')
+            print(name)
+            igrometro = Igrometro.objects.filter(nome__icontains=name)
+            if igrometro is None:
+                return JsonResponse({'error': 'L\'igrometro specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)
+            igrometro = [igrometro.values()[i] for i in range(len(igrometro.values()))]
+            return JsonResponse({'data': igrometro}, status=status.HTTP_200_OK)
         try:
             igrometro = Igrometro.objects.get(id=pk)
         except Igrometro.DoesNotExist:
@@ -111,6 +119,14 @@ class MasterIgrometriAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
+        if pk is None:
+            name = request.GET.get('name')
+            print(name)
+            igrometro = MasterIgrometri.objects.filter(nome__icontains=name)
+            if igrometro is None:
+                return JsonResponse({'error': 'Il master specificato non esiste.'}, status=status.HTTP_404_NOT_FOUND)
+            igrometro = [igrometro.values()[i] for i in range(len(igrometro.values()))]
+            return JsonResponse({'data': igrometro}, status=status.HTTP_200_OK)
         try:
             # Recupera l'oggetto Igrometro
             master = MasterIgrometri.objects.get(id=pk)
@@ -228,7 +244,8 @@ class CustomAuthToken(APIView):
     def get(self, request, *args, **kwargs):
         email = request.data.get('email')
         password = request.data.get('password')
-        user = authenticate(request, email=email, password=password)
+        username = request.data.get('username')
+        user = authenticate(request, email=email, password=password, username=username)
 
         if user is not None:
             token, created = Token.objects.get_or_create(user=user)

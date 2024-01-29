@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Master e Igrometri sulla Mappa{% endblock %}
+{% block head %}
+<link href='{% static "css/forms.css" %}' rel="stylesheet">'
+{% endblock %}
+{% block content %}
+<div class="container-fluid header bg-white p-0">
+            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+                <div class="col-md-6 p-5 mt-lg-5">
+                    <h1 class="display-5 animated fadeIn mb-4">Hygrometer Stats <span class="text-primary"></span>  </h1>
+                    <p class="animated fadeIn mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet
+                        sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
+                </div>
+                <div class="col-md-6 animated fadeIn">
+                    <img class="img-fluid" src='{% static "img/img6.jpeg" %}' alt="">
+ 
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+
+
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mx-auto" style="padding: 80px;">
+                    <h1  style="color: #377c85;">{{ igrometro.nome }}</h1>
+                    <p style="font-size: 25px"  style="color: #377c85;">ID: {{ igrometro.id }}</p>
+        
+                    <form method="post">
+                        {% csrf_token %}
+        
+                        <div class="form-row">
+                            <div class="form-group col-md-12 mb-3">
+                                <label for="{{ form.nome.id }}"  style="color: #377c85;">Name:</label>
+                                {{ form.nome }}
+                            </div>
+                       
+                            <div class="form-group col-md-12 mb-3" >
+                                <label for="{{ form.latitudine.id }}"  style="color: #377c85;">Latitude:</label>
+                                {{ form.latitudine }}
+                            </div>
+        
+                            <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
+                                <label for="{{ form.longitudine.id }}"  style="color: #377c85;">Longitude:</label>
+                                {{ form.longitudine }}
+                            </div>
+                            <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
+                                <label for="{{ form.longitudine.id }}"  style="color: #377c85;">Master:</label>
+                                {{ form.master }}
+                            </div>
+                            <div class="form-group col-md-12 mb-7" style="margin-top: 30px;">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                
+                            </div>
+                        </div>
+                 
+        
+                        
+                    </form>
+                </div>
+        
+                <div class="col-md-6">
+                   <canvas id="myChart" width="400" height="200" style="
+                   padding-bottom: 150px;
+                   height: 587px; margin-top: 100px;
+               "></canvas>
+                </div>
+            </div>
+            
+        </div>
+
+        
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Recupera i dati dal template Django
+                var misurazioni = {{ igrometro.misurazioni|safe }};
+                console.log("Qua")
+        
+                // Estrai le date e l'umidità
+                var dateLabels = misurazioni.map(function(misurazione) {
+                    return misurazione.data;
+                });
+                console.log(dateLabels)
+        
+                var umiditaData = misurazioni.map(function(misurazione) {
+                    return misurazione.umidita;
+                });
+                console.log(umiditaData)
+        
+                // Crea il grafico
+                var ctx = document.getElementById('myChart').getContext('2d');
+                
+                const colors = {
+                    purple: {
+                        default: "rgba(55, 124, 133, 1 )",
+                        half: "rgba(55, 124, 133, 0.5 )",
+                        quarter: "rgba(55, 124, 133, 0.25 )",
+                        zero: "rgba(55, 124, 133, 0 )"
+                    },
+                    indigo: {
+                        default: "rgba(80, 102, 120, 1)",
+                        quarter: "rgba(80, 102, 120, 0.25)"
+                    }
+                };
+        
+                const weight = umiditaData;
+        
+                const labels = dateLabels;
+        
+                ctx.canvas.height = 100;
+        
+                gradient = ctx.createLinearGradient(0, 25, 0, 600);
+                gradient.addColorStop(0, colors.purple.half);
+                gradient.addColorStop(0.35, colors.purple.quarter);
+                gradient.addColorStop(1, colors.purple.zero);
+        
+                const options = {
+                    type: "line",
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Umidità',
+                                fill: true,
+                                backgroundColor: gradient,
+                                pointBackgroundColor: colors.purple.default,
+                                borderColor: colors.purple.default,
+                                data: weight,
+                                lineTension: 0.2,
+                                borderWidth: 2,
+                                pointRadius: 3
+                            }
+                        ]
+                    },
+                    options: {
+                        maintainAspectRatio: false, 
+                        layout: {
+                            padding: 10
+                        },
+                        responsive: true,
+                        legend: {
+                            display: true
+                        },
+                        scales: {
+                            xAxes: [
+                                {
+                                    gridLines: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        padding: 10,
+                                        autoSkip: false,
+                                        maxRotation: 15,
+                                        minRotation: 15
+                                    }
+                                }
+                            ],
+                            yAxes: [
+                                {
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: "Weight in KG",
+                                        padding: 10
+                                    },
+                                    gridLines: {
+                                        display: true,
+                                        color: colors.indigo.quarter
+                                    },
+                                    ticks: {
+                                        beginAtZero: false,
+                                        max: 63,
+                                        min: 57,
+                                        padding: 10
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                };
+        
+                window.onload = function () {
+                    window.myLine = new Chart(ctx, options);
+                    Chart.defaults.global.defaultFontColor = colors.indigo.default;
+                    Chart.defaults.global.defaultFontFamily = "Fira Sans";
+                };
+            });
+        </script>
+        
+
+        
+{% endblock %}

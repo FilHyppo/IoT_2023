@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Master e Igrometri sulla Mappa{% endblock %}
+{% block head %}
+<style>
+    /* Stile per la barra di scorrimento */
+    .scrollable-container {
+        overflow: auto;
+        max-height: 300px; /* Imposta un'altezza massima per la visualizzazione della scrollbar */
+        border: 0px solid #ccc; /* Opzionale: bordo per migliorare la visualizzazione */
+        padding: 10px; /* Opzionale: spazio interno per una migliore presentazione */
+    }
+    .scrollable-container::-webkit-scrollbar {
+            width: 12px;
+        }
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background-color: #1f414d;
+            border-radius: 10px;
+        }
+        .scrollable-container::-webkit-scrollbar-track {
+            background-color: #377c85;
+            border-radius: 10px;
+        }
+    table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+</style>
+<link href='{% static "css/forms.css" %}' rel="stylesheet">'
+{% endblock %}
+{% block content %}
+<div class="container-fluid header bg-white p-0">
+            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+                <div class="col-md-6 p-5 mt-lg-5">
+                    <h1 class="display-5 animated fadeIn mb-4">Master Details <span class="text-primary"></span>  </h1>
+                    <p class="animated fadeIn mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet
+                        sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
+                </div>
+                <div class="col-md-6 animated fadeIn">
+                    <img class="img-fluid" src='{% static "img/img6.jpeg" %}' alt="">
+ 
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+
+
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mx-auto" style="padding: 80px;">
+                    <h1 style="color: #1f414d;">{{ master.nome }}</h1>
+                    <p style="font-size: 25px; color: #1f414d;">ID: {{ master.id }}</p>
+        
+                    <form method="post">
+                        {% csrf_token %}
+        
+                        <div class="form-row">
+                            <div class="form-group col-md-12 mb-3">
+                                <label for="{{ form.nome.id }}" style="color: #377c85;">Name:</label>
+                                {{ form.nome }}
+                            </div>
+                       
+                            <div class="form-group col-md-12 mb-3" >
+                                <label for="{{ form.latitudine.id }}" style="color: #377c85;">Latitude:</label>
+                                {{ form.latitudine }}
+                            </div>
+        
+                            <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
+                                <label for="{{ form.longitudine.id }}" style="color: #377c85;">Longitude:</label>
+                                {{ form.longitudine }}
+                            </div>
+                            <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
+                                <label for="{{ form.longitudine.id }}" style="color: #377c85;">Quota:</label>
+                                {{ form.quota }}
+                            </div>
+                            <div class="form-group col-md-12 mb-7" style="margin-top: 30px;">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                
+                            </div>
+                        </div>
+                 
+        
+                        
+                    </form>
+  
+                </div>
+        
+                <div class="col-md-6" style="margin-top: 165px; color: #1f414d;">
+                    <h2 style="text-align: center;">Hygrometers:</h2>
+                    <div class="scrollable-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>ID</th>
+                                    <th>Creation Date</th>
+                                    <!-- Aggiungi altri attributi secondo necessità -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for igrometro in igrometri %}
+                                    <tr>
+                                        <td><a href="/hygrometer/{{igrometro.id}}" style="color: #138a6e; text-decoration: none;"> {{ igrometro.nome }}</a></td>
+                                        <td>{{ igrometro.id }}</td>
+                                        <td>{{ igrometro.data_creazione }}</td>
+                                        <!-- Aggiungi altri valori degli attributi secondo necessità -->
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Recupera i dati dal template Django
+                var misurazioni = {{ igrometro.misurazioni|safe }};
+                console.log("Qua")
+        
+                // Estrai le date e l'umidità
+                var dateLabels = misurazioni.map(function(misurazione) {
+                    return misurazione.data;
+                });
+                console.log(dateLabels)
+        
+                var umiditaData = misurazioni.map(function(misurazione) {
+                    return misurazione.umidita;
+                });
+                console.log(umiditaData)
+        
+                // Crea il grafico
+                var ctx = document.getElementById('myChart').getContext('2d');
+                
+                const colors = {
+                    purple: {
+                        default: "rgba(149, 76, 233, 1)",
+                        half: "rgba(149, 76, 233, 0.5)",
+                        quarter: "rgba(149, 76, 233, 0.25)",
+                        zero: "rgba(149, 76, 233, 0)"
+                    },
+                    indigo: {
+                        default: "rgba(80, 102, 120, 1)",
+                        quarter: "rgba(80, 102, 120, 0.25)"
+                    }
+                };
+        
+                const weight = umiditaData;
+        
+                const labels = dateLabels;
+        
+                ctx.canvas.height = 100;
+        
+                gradient = ctx.createLinearGradient(0, 25, 0, 600);
+                gradient.addColorStop(0, colors.purple.half);
+                gradient.addColorStop(0.35, colors.purple.quarter);
+                gradient.addColorStop(1, colors.purple.zero);
+        
+                const options = {
+                    type: "line",
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Umidità',
+                                fill: true,
+                                backgroundColor: gradient,
+                                pointBackgroundColor: colors.purple.default,
+                                borderColor: colors.purple.default,
+                                data: weight,
+                                lineTension: 0.2,
+                                borderWidth: 2,
+                                pointRadius: 3
+                            }
+                        ]
+                    },
+                    options: {
+                        maintainAspectRatio: false, 
+                        layout: {
+                            padding: 10
+                        },
+                        responsive: true,
+                        legend: {
+                            display: true
+                        },
+                        scales: {
+                            xAxes: [
+                                {
+                                    gridLines: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        padding: 10,
+                                        autoSkip: false,
+                                        maxRotation: 15,
+                                        minRotation: 15
+                                    }
+                                }
+                            ],
+                            yAxes: [
+                                {
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: "Weight in KG",
+                                        padding: 10
+                                    },
+                                    gridLines: {
+                                        display: true,
+                                        color: colors.indigo.quarter
+                                    },
+                                    ticks: {
+                                        beginAtZero: false,
+                                        max: 63,
+                                        min: 57,
+                                        padding: 10
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                };
+        
+                window.onload = function () {
+                    window.myLine = new Chart(ctx, options);
+                    Chart.defaults.global.defaultFontColor = colors.indigo.default;
+                    Chart.defaults.global.defaultFontFamily = "Fira Sans";
+                };
+            });
+        </script>
+        
+
+        
+{% endblock %}

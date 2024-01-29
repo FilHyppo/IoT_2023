@@ -17,3 +17,23 @@ class IrrigatoreForm(forms.ModelForm):
         user.save()
         return user
  """
+
+from django import forms
+from REST.models import Igrometro, MasterIgrometri
+
+class IgrometroForm(forms.ModelForm):
+    class Meta:
+        model = Igrometro
+        fields = ['nome', 'latitudine', 'longitudine', 'master']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Remove the default "-------" option for the 'master' field
+        self.fields['master'].empty_label = None
+
+
+class MasterForm(forms.ModelForm):
+    class Meta:
+        model = MasterIgrometri
+        fields = ['nome', 'latitudine', 'longitudine', 'quota']
+

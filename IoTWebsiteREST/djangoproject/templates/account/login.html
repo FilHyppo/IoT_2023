@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+{% block head %}
+<style>
+    /* Stile per la barra di scorrimento */
+    .scrollable-container {
+        overflow: auto;
+        max-height: 300px; /* Imposta un'altezza massima per la visualizzazione della scrollbar */
+        border: 0px solid #ccc; /* Opzionale: bordo per migliorare la visualizzazione */
+        padding: 10px; /* Opzionale: spazio interno per una migliore presentazione */
+    }
+    .scrollable-container::-webkit-scrollbar {
+            width: 12px;
+        }
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background-color: #1f414d;
+            border-radius: 10px;
+        }
+        .scrollable-container::-webkit-scrollbar-track {
+            background-color: #377c85;
+            border-radius: 10px;
+        }
+    table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+</style>
+<link href='{% static "css/forms.css" %}' rel="stylesheet">'
+{% endblock %}
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Login</h2>
+          </div>
+          <div class="card-body">
+            <form method="post" action="{% url 'account_login' %}" class="needs-validation" novalidate>
+              {% csrf_token %}
+              {% if form.non_field_errors%}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+              <div class="form-group">
+                {% comment %} {{ form.login.label_tag }} {% endcomment %}
+                <label>Username or email:</label>
+                {% if form.login.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.login.errors.0 }}
+                    </div>                    
+                {% endif %}
+                {{ form.login }}
+              </div>
+              <div class="form-group">
+                {{ form.password.label_tag }}
+                {% if form.password.errors %}
+                <div class="alert alert-danger">
+                    {{ form.password.errors.0 }}
+                  </div>
+                {% endif %}
+                {{ form.password }}
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+           <p class="mt-2">Don't have an account? <a href="{% url 'account_signup' %}">Sign up here.</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
