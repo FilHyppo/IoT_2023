@@ -11,6 +11,12 @@ django-filter = "*"
 django-cors-headers = "*"
 django-allauth = "*"
 psycopg2 = "*"
+paho-mqtt = "*"
+schedule = "*"
+celery = "*"
+django-celery-beat = "*"
+django-celery-results = "*"
+redis = "*"
 
 [dev-packages]
 

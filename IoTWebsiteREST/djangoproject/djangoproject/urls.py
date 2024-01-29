@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('REST.urls')),
     path('accounts/', include('allauth.urls')),
-
+    path('mqtt/', include('mqtt_integration.urls')),
     path('', include('website.urls')),
     #path('api-auth/', include('rest_framework.urls')),
     #path('api/rest-auth/', include('rest_auth.urls')),

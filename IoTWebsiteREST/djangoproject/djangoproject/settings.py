@@ -60,6 +60,10 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'mqtt_integration',
+    'django_celery_beat',
+    'celery',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -243,3 +247,35 @@ ACCOUNT_FORMS = {
 }
 
 #LOGIN_URL = '/accounts/login/'
+
+
+
+
+#MQTT configuration
+MQTT_BROKER_HOST = "localhost"
+MQTT_BROKER_PORT = 1883  # Cambialo se necessario
+MQTT_BROKER_KEEPALIVE = 60  # Cambialo se necessario
+MQTT_QOS = 0
+MQTT_USERNAME = '' #get_secret('MQTT_USERNAME')
+MQTT_PASSWORD = '' #get_secret('MQTT_PASSWORD')
+MQTT_CLIENT_ID = 'django_mqtt_client'
+MQTT_TOPIC1 = 'igrometro/+'
+MQTT_TOPIC2 = 'irrigatore/+'
+
+
+#CELERY configuration
+WSL_IP_ADDR = '172.26.17.241'
+CELERY_BROKER_URL = f'redis://{WSL_IP_ADDR}:6379/0'  # Sostituisci con la tua configurazione di Celery
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+""" CELERY_BEAT_SCHEDULE = {
+    'my-periodic-task': {
+        'task': 'mqtt_integration.tasks.periodic_task',
+        'schedule': crontab(minute=0, hour=0),  # Esegui ogni giorno a mezzanotte
+    },
+} """
