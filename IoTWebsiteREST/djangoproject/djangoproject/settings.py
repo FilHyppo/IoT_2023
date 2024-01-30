@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 import json
 from django.core.exceptions import ImproperlyConfigured
+from celery.beat import crontab
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -266,16 +268,13 @@ MQTT_TOPIC2 = 'irrigatore/+'
 #CELERY configuration
 WSL_IP_ADDR = '172.26.17.241'
 CELERY_BROKER_URL = f'redis://{WSL_IP_ADDR}:6379/0'  # Sostituisci con la tua configurazione di Celery
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+#CELERY_CACHE_BACKEND = 'django-cache'
 
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
 
 """ CELERY_BEAT_SCHEDULE = {
     'my-periodic-task': {
         'task': 'mqtt_integration.tasks.periodic_task',
-        'schedule': crontab(minute=0, hour=0),  # Esegui ogni giorno a mezzanotte
+        'schedule': crontab(),  # Esegui ogni minuto
     },
 } """

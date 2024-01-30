@@ -21,7 +21,7 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'my-periodic-task': {
-        'task': 'djangoproject.mqtt_integration.tasks.periodic_task',
+        'task': 'mqtt_integration.tasks.periodic_task',
         'schedule': crontab(),  # Esegui ogni minuto
     },
     # Aggiungi altri task periodici se necessario

@@ -29,7 +29,7 @@ class MQTT_client:
         self.client.subscribe(self.topic, qos=self.qos)
         #self.client.will_set('bug', payload='offline', qos=self.qos, retain=True)
 
-    def on_message(self, client, userdata, msg):
+    def on_message(self, client, userdata, msg): #Prova di fuzionamento, DA CAMBIARE TODO
         print(f'Client: {self.client_id}. Received message on topic: {msg.topic} with payload: {msg.payload}')
         id = msg.topic.split('/')[1]
         try:
@@ -65,6 +65,7 @@ class MQTT_client:
         self.client.loop_stop()
 
     def start(self):
+        print(f'Client {self.client_id} connecting to {self.broker_ip}:{self.broker_port}')
         self.client.connect(self.broker_ip, self.broker_port, self.keep_alive)
         self.client.loop_start()
         
