@@ -30,30 +30,15 @@ class MQTT_client:
         #self.client.will_set('bug', payload='offline', qos=self.qos, retain=True)
 
     def on_message(self, client, userdata, msg): #Prova di fuzionamento, DA CAMBIARE TODO
-        print(f'Client: {self.client_id}. Received message on topic: {msg.topic} with payload: {msg.payload}')
-        id = msg.topic.split('/')[1]
-        try:
-            msg = msg.payload.decode('utf-8')
-            igrometro = models.Igrometro.objects.get(id=id)
-            val = int(msg)
-            #voglio metterci la data nel formato solito nel primo campo di ogni misurazione
-            misurazione = [time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), val]
-            igrometro.ultima_misurazione = misurazione
-            igrometro.misurazioni.append(misurazione)
-            igrometro.save()
-        except Exception as e:
-            print(e)
-            print('Errore nella ricezione del messaggio')
-
+        print(f'Client: {self.client_id} received message on topic: {msg.topic} with payload: {msg.payload}')
 
     def on_publish(self, client, userdata, mid):
-        print("mid: "+str(mid))
-
+        pass
     def on_subscribe(self, client, userdata, mid, granted_qos, properties=None):
         pass
 
     def on_disconnect(self, client, userdata, rc, properties=None):
-        print("Disconnected with result code "+str(rc))
+        print("MQTT client disconnected")
 
     def publish(self, message):
         self.client.publish(self.topic, message, qos=self.qos, retain=False)
@@ -65,7 +50,7 @@ class MQTT_client:
         self.client.loop_stop()
 
     def start(self):
-        print(f'Client {self.client_id} connecting to {self.broker_ip}:{self.broker_port}')
+        print(f'MQTT client {self.client_id} connecting to {self.broker_ip}:{self.broker_port}')
         self.client.connect(self.broker_ip, self.broker_port, self.keep_alive)
         self.client.loop_start()
         
