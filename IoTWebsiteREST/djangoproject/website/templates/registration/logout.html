@@ -6,7 +6,7 @@
 
 {% load static %}
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
 {% endblock %}
@@ -19,13 +19,17 @@
 
 {% block content %} 
 <div class="hero">
-    <h2 class="titolo_logout">Logout eseguito con successo</h2>
-    <h2 class="sottotitolo_logout">A presto</h2>
+  <h2 class="titolo_logout" style="color: #377c85; font-size: 40px;">Logout Successful</h2>
+  <h2 class="sottotitolo_logout" style="color: #377c85; font-size: 34px;">See you soon!</h2>
+  <br>
+  <br>
+  <div style="text-align: center;">
+    <img src='{% static "img/logo.png" %}' alt="Image" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin-top:-35px;" >
     <br>
-    <br>
-    <a href="{% url 'account_login' %}" class="hero" style="font-size: 20px; padding-left:46%;">
-        Torna al Login</a>
+    <a href="{% url 'account_login' %}" class="btn btn-primary px-3 d-none d-lg-flex" style="width:170px; margin:auto; margin-top: 10px;">Back to log in</a>
+  </div>
 </div>
+
 
 
 {% endblock %}
