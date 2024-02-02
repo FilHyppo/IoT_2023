@@ -1,13 +1,8 @@
 //arduino nero receiver
 
-// valori sul 500 indicano terreno  bagnato (acqua = 412), sul 700 indicano terreno secco (aria = 800) e per valori più alti indicano terreno via via più secco
+// valori sul 500 indicano terreno  bagnato (acqua = 412), sul 700 indicano terreno secco (aria = 808) e per valori più alti indicano terreno via via più secco
 #include <SPI.h>
 #include <LoRa.h>
-
-
-
-unsigned long previousMillis = 0;  // Utilizzata per memorizzare il tempo del ciclo precedente
-const long interval = 2000;        // Intervallo di tempo tra un ciclo e l'altro, cambiando questo valore regolo il delay
 
 
 void setup() {
@@ -15,7 +10,7 @@ void setup() {
   pinMode(13, OUTPUT);
   while (!Serial);
 
-  Serial.println("LoRa Receiver");
+  //Serial.println("LoRa Receiver");
 
   if (!LoRa.begin(868E6)) {
     Serial.println("Starting LoRa failed!");
@@ -33,7 +28,7 @@ void loop() {
     
   if (packetSize) {
     // received a packet
-    Serial.print("Received packet ");
+    //Serial.print("Received packet ");
 
     // read packet
     while (LoRa.available()) {
@@ -41,7 +36,7 @@ void loop() {
       umidita = LoRa.parseInt();
       //stampa valori letti
       Serial.print("id: ");
-      Serial.println(id);
+      Serial.print(id);
       Serial.print(" umidita: ");
       Serial.println(umidita);
       
@@ -54,7 +49,7 @@ void loop() {
 
     // 5: comunicazione seriale con bridge
 
-    String messaggio = String(id) + " " + String(umidita);
-    Serial.println(messaggio);  
+    //String messaggio = String(id) + " " + String(umidita);
+    //Serial.println(messaggio);
   }
 }

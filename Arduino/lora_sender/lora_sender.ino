@@ -1,5 +1,5 @@
 //arduino verde sender
-// valori sul 500 indicano terreno  bagnato (acqua = 412), sul 700 indicano terreno secco (aria = 800) e per valori più alti indicano terreno via via più secco
+// valori sul 500 indicano terreno  bagnato (acqua = 412), sul 700 indicano terreno secco (aria = 808) e per valori più alti indicano terreno via via più secco
 
 #include <SPI.h>
 #include <LoRa.h>

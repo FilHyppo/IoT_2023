@@ -37,7 +37,7 @@ SECRET_KEY = get_secret('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["postgredjango.ew.r.appspot.com" ,
+ALLOWED_HOSTS = ["postgredjango.ew.r.appspot.com", "localhost",
                  "127.0.0.1"]
 
 
@@ -266,6 +266,7 @@ MQTT_TOPIC2 = 'irrigatore/+'
 
 
 #CELERY configuration
+#TODO per Filippo mettere indirizzo 127.0.0.1
 WSL_IP_ADDR = '172.26.17.241'
 CELERY_BROKER_URL = f'redis://{WSL_IP_ADDR}:6379/0'  # Sostituisci con la tua configurazione di Celery
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
