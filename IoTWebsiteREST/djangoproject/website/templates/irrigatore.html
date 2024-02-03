@@ -1,0 +1,58 @@
+<!-- irrigatore.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenStreetMap Integration with Marker</title>
+  
+  <!-- Aggiungi il CSS di Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  
+  <!-- Stile per il contenitore della mappa -->
+  <style>
+    #map {
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Contenitore per la mappa -->
+  <div id="map"></div>
+
+  <!-- Aggiungi il JavaScript di Leaflet -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script>
+    // Inizializza la mappa con una posizione di default
+    var map = L.map('map').setView([{{ irrigatore.latitudine }}, {{ irrigatore.longitudine }}], 12);
+
+
+     // Aggiungi un gestore di eventi per il clic sulla mappa
+     map.on('click', function (e) {
+        var lat = e.latlng.lat;
+        var lon = e.latlng.lng;
+  
+        // Crea un marker con le coordinate e aggiungilo alla mappa
+        var marker = L.marker([lat, lon]).addTo(map);
+  
+        // Apri una finestra popup con le coordinate del marker
+        marker.bindPopup('Latitude: ' + lat + '<br>Longitude: ' + lon).openPopup();
+      });
+
+    // Aggiungi un layer della mappa di OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Aggiungi il marker dell'irrigatore sulla mappa
+    var irrigatoreMarker = L.marker([{{ irrigatore.latitudine }}, {{ irrigatore.longitudine }}]).addTo(map);
+
+    // Apri una finestra popup con le informazioni dell'irrigatore
+    irrigatoreMarker.bindPopup('<b>{{ irrigatore.nome }}</b><br>Latitude: {{ irrigatore.latitudine }}<br>Longitude: {{ irrigatore.longitudine }}').openPopup();
+  </script>
+
+</body>
+</html>

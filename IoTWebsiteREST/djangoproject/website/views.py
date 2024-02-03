@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import user_passes_test
 from django.views import View
 from .forms import IgrometroForm, IrrigatoreForm, MasterForm
-from REST.models import Igrometro, MasterIgrometri
+from REST.models import Igrometro, Irrigatore, MasterIgrometri
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -200,3 +200,7 @@ def master_detail_and_edit(request, master_id):
 
     return render(request, 'master.html', {'master': master, 'form': form, 'igrometri':igrometri})
 
+def sprinkler_detail_and_edit(request, sprinkler_id):
+    irrigatore = get_object_or_404(Irrigatore, id=sprinkler_id)
+    
+    return render(request, 'irrigatore.html', {'irrigatore': irrigatore,})

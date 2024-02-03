@@ -10,7 +10,10 @@ class MasterIgrometriAdmin(admin.ModelAdmin):
 class IgrometroAdmin(admin.ModelAdmin):
     list_display = ('id', 'nome', 'latitudine', 'longitudine', 'data_creazione', 'ultima_misurazione', 'attivo', 'master')
 
+class IrrigatoreAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome', 'latitudine', 'longitudine', 'data_creazione', 'quota', 'attivo')
+
 admin.site.register(MasterIgrometri, MasterIgrometriAdmin)
 admin.site.register(Igrometro, IgrometroAdmin)
 admin.site.register(CustomUser)
-admin.site.register(Irrigatore)
+admin.site.register(Irrigatore, IrrigatoreAdmin)
