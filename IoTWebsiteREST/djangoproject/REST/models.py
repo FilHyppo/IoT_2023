@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
+from geopy.distance import geodesic
 
 PARAMS = ['data', 'umidita'] #parametri che ogni misurazione dovrebbe contenere
 
@@ -98,3 +99,12 @@ class Irrigatore(models.Model):
     quota = models.FloatField()
 
     attivo = models.BooleanField(default=True)
+
+
+    def nearest_igromtri(self, raggio_km):
+        igrometri_vicini = Igrometro.objects.all()
+        nearest_igrometri = [
+            igrometro for igrometro in igrometri_vicini
+            if geodesic((self.latitudine, self.longitudine), (igrometro.latitudine, igrometro.longitudine)).km <= raggio_km
+        ]
+        return nearest_igrometri
