@@ -202,5 +202,12 @@ def master_detail_and_edit(request, master_id):
 
 def sprinkler_detail_and_edit(request, sprinkler_id):
     irrigatore = get_object_or_404(Irrigatore, id=sprinkler_id)
-    
-    return render(request, 'irrigatore.html', {'irrigatore': irrigatore,})
+    if request.method == 'POST':
+        form = IrrigatoreForm(request.POST, instance=irrigatore)
+        if form.is_valid():
+            form.save()
+            return render(request, 'irrigatore.html', {'irrigatore': irrigatore, 'form': form})
+    else:
+        form = MasterForm(instance=irrigatore)
+
+    return render(request, 'irrigatore.html', {'irrigatore': irrigatore, 'form': form})

@@ -11,3 +11,11 @@ def celery_test(request):
     result = tasks.add.delay(a, b)
     print("Celery test executed")
     return JsonResponse({'status': 'OK', 'result': result.get(timeout=1)})
+
+def celery_sprinkle(request, sprinkler_id, duration):
+    # Ora puoi usare sprinkler_id e duration nella tua logica per attivare lo sprinkler per la durata specificata
+    # Ad esempio, potresti chiamare la tua funzione Celery per attivare lo sprinkler con id=sprinkler_id per la durata specificata.
+    print("Qya")
+    result = tasks.sprinkle.delay(sprinkler_id, duration)
+    print("sprinkling")
+    return JsonResponse({'status': 'OK', 'result': result.get(timeout=1)})

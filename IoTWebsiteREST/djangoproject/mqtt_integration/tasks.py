@@ -27,6 +27,11 @@ def add(x, y):
     print("Add task executed")
     return x + y
 
+@app.task
+def sprinkle(sprinkler_id, duration):
+    print("sprinklig, id:" + str(sprinkler_id) + '  duration: ' + str(duration))
+    return duration
+
 @app.task(ignore_result=True)
 def test_modelli(nome):
     from REST import models

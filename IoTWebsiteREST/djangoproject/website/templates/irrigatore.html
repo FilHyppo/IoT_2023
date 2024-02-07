@@ -1,11 +1,9 @@
-<!-- irrigatore.html -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sprinkler details{% endblock %}
+{% block head %}
+<meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenStreetMap Integration with Marker</title>
   
   <!-- Aggiungi il CSS di Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -16,43 +14,294 @@
       height: 400px;
     }
   </style>
-</head>
-<body>
+<style>
+    /* Aggiungi questo stile al tuo CSS o nel tag style del tuo template */
+    .custom-switch {
+      display: flex; /* Utilizza flexbox per allineare gli elementi interni */
+      align-items: center; /* Centra verticalmente gli elementi */
+    }
+    
+    .custom-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .custom-slider {
+      position: relative; /* Rimuovi absolute e imposta relative */
+      cursor: pointer;
+      width: 60px; /* Imposta una larghezza fissa per lo slider */
+      height: 34px;
+      margin-left:70px;
+      background-color: #1f414d;; /* Colore di default dello slider */
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .custom-slider:before {
+      content: "";
+      height: 26px;
+      width: 26px;
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    .custom-switch input:checked + .custom-slider {
+      background-color: #377c85; /* Colore quando lo switch è attivato */
+    }
+    
+    .custom-switch input:checked + .custom-slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+    
 
-  <!-- Contenitore per la mappa -->
-  <div id="map"></div>
+</style>
+<link href='{% static "css/forms.css" %}' rel="stylesheet">'
+{% endblock %}
+{% block content %}
+<div class="container-fluid header bg-white p-0">
+            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+                <div class="col-md-6 p-5 mt-lg-5">
+                    <h1 class="display-5 animated fadeIn mb-4">Sprinkler details <span class="text-primary"></span>  </h1>
+                    <p class="animated fadeIn mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet
+                        sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
+                </div>
+                <div class="col-md-6 animated fadeIn">
+                    <img class="img-fluid" src='{% static "img/irrigatore.jpeg" %}' alt="">
+ 
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
 
-  <!-- Aggiungi il JavaScript di Leaflet -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <script>
-    // Inizializza la mappa con una posizione di default
-    var map = L.map('map').setView([{{ irrigatore.latitudine }}, {{ irrigatore.longitudine }}], 12);
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mx-auto" style="padding: 80px; padding-bottom:0px;">
+                    <h1 style="color: #1f414d;">{{ irrigatore.nome }}</h1>
+                    <p style="font-size: 25px; color: #1f414d;">ID: {{ irrigatore.id }}</p>
+        
+                    <form method="post">
+                        {% csrf_token %}
+        
+                        <div class="form-row">
+                            <div class="form-group col-md-12 mb-3">
+                                <label for="{{ form.nome.id }}" style="color: #377c85;">Name:</label>
+                                {{ form.nome }}
+                            </div>
+                       
+                            <div class="form-group col-md-12 mb-3" >
+                                <label for="{{ form.latitudine.id }}" style="color: #377c85;">Latitude:</label>
+                                {{ form.latitudine}}
+                            </div>
+        
+                            <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
+                                <label for="{{ form.longitudine.id }}" style="color: #377c85;">Longitude:</label>
+                                {{ form.longitudine }}
+                            </div>
+                            <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
+                                <label for="{{ form.longitudine.id }}" style="color: #377c85;">Quota:</label>
+                                {{ form.quota }}
+                            </div>
+                            <div class="form-group col-md-12 mb-7" style="margin-top: 30px;">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                
+                            </div>
+                        </div>
+                 
+        
+                        
+                    </form>
 
 
-     // Aggiungi un gestore di eventi per il clic sulla mappa
-     map.on('click', function (e) {
-        var lat = e.latlng.lat;
-        var lon = e.latlng.lng;
-  
-        // Crea un marker con le coordinate e aggiungilo alla mappa
-        var marker = L.marker([lat, lon]).addTo(map);
-  
-        // Apri una finestra popup con le coordinate del marker
-        marker.bindPopup('Latitude: ' + lat + '<br>Longitude: ' + lon).openPopup();
-      });
+                   
+                </div>
+        
+                <div class="col-md-6" style="margin-top: 87px; color: #1f414d;">
+                    <div class="row ">
+                        <div class="col-md-6" style=" color: #1f414d;">
+                    <h2 style="">Sprinkler position:</h2>
+                        </div>
+                        <div class="col-md-6" style="color: #1f414d;margin-top: 4px;">
+                            <div class="custom-switch">
+                                <input class="form-check-input" type="checkbox" id="toggleMapClick">
+                                <label class="custom-slider" for="toggleMapClick"></label>
+                                <p class="sad" style="margin: auto; padding-left: 10px; font-size: 19px; color: #1f414d; font-weight: 600;">
+                                    Enable Map Click
+                                  </p>
+                                
+                              </div>
+                        </div>
+                    </div>
+                    <div id="map"></div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="container mt-4">
+            <div class="row ">
+        <div class="col-md-6" style="margin-top: 20px; color: #1f414d; padding: 80px; padding-top:0px;">
+        <div class="container mt-4">
+            <form id="sprinkleForm" class="d-flex ">
+                <button type="button" class="btn btn-primary" style="height: 37px; margin-top:32px; background-color:#1f414d;" onclick="sprinkle()">Sprinkle</button>
+              <div class="mb-3">
+                <label for="duration" class="form-label" style="margin-left:10px;">Duration (seconds):</label>
+                <input type="number" class="form-control" style="margin-left:10px; width: 150px;" id="duration" required value="60">
 
-    // Aggiungi un layer della mappa di OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+                
+              </div>
+            
+            </form>
+          </div>
+        </div>
 
-    // Aggiungi il marker dell'irrigatore sulla mappa
-    var irrigatoreMarker = L.marker([{{ irrigatore.latitudine }}, {{ irrigatore.longitudine }}]).addTo(map);
+        <div class="col-md-6" style="margin-top: 87px; color: #1f414d;">
+            <div id="resultMessage" style="display: none; color:#377c85; font-size: 19px;  font-weight: 600;"></div>
+        </div>
+    </div>
+    </div>
 
-    // Apri una finestra popup con le informazioni dell'irrigatore
-    irrigatoreMarker.bindPopup('<b>{{ irrigatore.nome }}</b><br>Latitude: {{ irrigatore.latitudine }}<br>Longitude: {{ irrigatore.longitudine }}').openPopup();
-  </script>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-</body>
-</html>
+        <script>
+            var newIcon = L.icon({
+                iconUrl: '{% static "img/marker3.png" %}',
+                iconSize: [38, 45],
+                iconAnchor: [22, 64],
+                popupAnchor: [-3, -76],
+            });
+            var mapClickEnabled = false;
+            var markers = []; // Array per mantenere traccia dei marker
+        
+            // Inizializza la mappa con una posizione di default
+            var map = L.map('map').setView([{{ irrigatore.latitudine }}, {{ irrigatore.longitudine }}], 12);
+        
+            document.getElementById('toggleMapClick').addEventListener('click', function () {
+                mapClickEnabled = !mapClickEnabled;
+            });
+
+            var irrigatoreMarker = L.marker([{{ irrigatore.latitudine }}, {{ irrigatore.longitudine }}]).addTo(map);
+            irrigatoreMarker.bindPopup('<b>{{ irrigatore.nome }}</b><br>Latitude: {{ irrigatore.latitudine }}<br>Longitude: {{ irrigatore.longitudine }}').openPopup();
+
+
+            document.getElementById('id_latitudine').addEventListener('input', function () {
+                var newLat = parseFloat(this.value);
+                var newLon = parseFloat(document.getElementById('id_longitudine').value);
+                updateIrrigatoreMarkerPosition(newLat, newLon);
+            });
+        
+            document.getElementById('id_longitudine').addEventListener('input', function () {
+                var newLat = parseFloat(document.getElementById('id_latitudine').value);
+                var newLon = parseFloat(this.value);
+                updateIrrigatoreMarkerPosition(newLat, newLon);
+            });
+            // Aggiungi un gestore di eventi per il clic sulla mappa
+            map.on('click', function (e) {
+                if (mapClickEnabled) {
+                    var lat = e.latlng.lat;
+                    var lon = e.latlng.lng;
+        
+                    // Rimuovi tutti i marker esistenti dalla mappa
+                    map.removeLayer(irrigatoreMarker);
+                    
+        
+                    // Crea un marker con le coordinate e aggiungilo alla mappa
+                    irrigatoreMarker = L.marker([lat, lon])
+                        .bindPopup("Nome: " + {{irrigatotere.nome}} + "<br>ID: " + {{irrigatore.id}})
+                        .addTo(map);
+        
+                    // Aggiorna i valori dei campi di latitudine e longitudine nel form
+                    document.getElementById('id_longitudine').value = lon;
+                    document.getElementById('id_latitudine').value = lat;
+        
+                    // Apri una finestra popup con le coordinate del marker
+                    irrigatoreMarker.bindPopup('Latitude: ' + lat + '<br>Longitude: ' + lon).openPopup();
+        
+                    
+                }
+            });
+        
+            // Funzione per rimuovere tutti i marker dalla mappa
+            function removeMarkers() {
+                for (var i = 0; i < markers.length; i++) {
+                    map.removeLayer(markers[i]);
+                }
+                markers = []; // Svuota l'array dei marker
+            }
+        
+            // Funzione per aggiornare la posizione dell'irrigatoreMarker
+            function updateIrrigatoreMarkerPosition(lat, lon) {
+                irrigatoreMarker.setLatLng([lat, lon]);
+                irrigatoreMarker.bindPopup('<b>{{ irrigatore.nome }}</b><br>Latitude: ' + lat + '<br>Longitude: ' + lon).openPopup();
+            }
+        
+            // Aggiungi un layer della mappa di OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        
+            // Aggiungi il marker dell'irrigatore sulla mappa
+          
+            
+            
+        </script>        
+
+
+        
+        
+
+        <script>
+            seconds = 0;
+        
+            function sprinkle() {
+                var sprinklerId = {{irrigatore.id}};
+                var duration = document.getElementById('duration').value;
+        
+                // Utilizza la funzione url di Django per generare il link completo
+                var url = "{% url 'celery_sprinkle' 0 0 %}".replace('0', sprinklerId).replace('0', duration);
+        
+                // Chiamata AJAX per inviare i dati al server
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        var resultMessage = document.getElementById('resultMessage');
+                        resultMessage.innerHTML = 'sprinkling';
+                        resultMessage.style.display = 'block';
+                        seconds=data.result;
+                        // Funzione per aggiornare i puntini dinamici
+                        function updateDots() {
+                            if  (resultMessage.innerHTML=='sprinkling...'){
+                                resultMessage.innerHTML='sprinkling';
+                            }else{
+                                var dots = '.';
+                                resultMessage.innerHTML += dots;
+                            }
+                            console.log('qua')
+                        }
+        
+                        // Aggiorna i puntini ogni secondo
+                        var interval = setInterval(function () {
+                            updateDots();
+                        }, 1000);
+        
+                        // Nascondi il messaggio dopo 3 secondi
+                        setTimeout(function () {
+                            clearInterval(interval); // Interrompi l'aggiornamento dei puntini
+                            resultMessage.style.display = 'none';
+                        }, 1000*seconds);
+                    })
+                    .catch(error => console.error('Errore:', error));
+            }
+        </script>
+        
+        
+{% endblock %}

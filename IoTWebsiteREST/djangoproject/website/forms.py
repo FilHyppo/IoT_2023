@@ -37,3 +37,8 @@ class MasterForm(forms.ModelForm):
         model = MasterIgrometri
         fields = ['nome', 'latitudine', 'longitudine', 'quota']
 
+class SprinklerForm(forms.ModelForm):
+    class Meta:
+        model = Irrigatore
+        fields = ['nome', 'latitudine', 'longitudine', 'quota', 'attivo']
+

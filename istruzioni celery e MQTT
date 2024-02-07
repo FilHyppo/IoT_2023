@@ -15,7 +15,7 @@ Per worker:
 Per beat:
     celery -A djangoproject beat -l info
 Per flower:
-    celery -A django project flower
+    celery -A djangoproject flower
 
 Descrizione veloce:
     Il server redis, detto broker, gestisce la comunicazione tra worker e beat.(fa tutto da solo)
