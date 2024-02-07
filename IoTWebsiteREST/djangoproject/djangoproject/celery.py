@@ -24,6 +24,10 @@ app.conf.beat_schedule = {
         'task': 'mqtt_integration.tasks.periodic_task',
         'schedule': crontab(),  # Esegui ogni minuto
     },
+    'refresh-misurazioni':{
+        'task': 'REST.tasks.refresh_misurazioni',
+        'schedule': crontab(),  # Esegui ogni giorno a mezzanotte
+    }
     # Aggiungi altri task periodici se necessario
 }
 
