@@ -28,7 +28,7 @@ def test_modelli(nome):
     igrometro.save()
     return 0
 
-@app.task
+@shared_task
 def sprinkle(sprinkler_id, duration):
     print("sprinklig, id:" + str(sprinkler_id) + '  duration: ' + str(duration))
     return duration

@@ -93,8 +93,7 @@
         <div class="container mt-4">
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mx-auto" style="padding: 80px; padding-bottom:0px;">
-                    <h1 style="color: #1f414d;">{{ irrigatore.nome }}</h1>
-                    <p style="font-size: 25px; color: #1f414d;">ID: {{ irrigatore.id }}</p>
+
         
                     <form method="post">
                         {% csrf_token %}
@@ -138,7 +137,7 @@
                    
                 </div>
         
-                <div class="col-md-6" style="margin-top: 87px; color: #1f414d;">
+                <div class="col-md-6" style="margin-top: 52px; color: #1f414d;">
                     <div class="row ">
                         <div class="col-md-6" style=" color: #1f414d;">
                     <h2 style="">Sprinkler position:</h2>
@@ -156,30 +155,12 @@
                     </div>
                     <div id="map"></div>
                 </div>
+                <div style="margin-top:40px;">
             </div>
             
         </div>
-        <div class="container mt-4">
-            <div class="row ">
-        <div class="col-md-6" style="margin-top: 20px; color: #1f414d; padding: 80px; padding-top:0px;">
-        <div class="container mt-4">
-            <form id="sprinkleForm" class="d-flex ">
-                <button type="button" class="btn btn-primary" style="height: 37px; margin-top:32px; background-color:#1f414d;" onclick="sprinkle()">Sprinkle</button>
-              <div class="mb-3">
-                <label for="duration" class="form-label" style="margin-left:10px;">Duration (seconds):</label>
-                <input type="number" class="form-control" style="margin-left:10px; width: 150px;" id="duration" required value="60">
 
-                
-              </div>
-            
-            </form>
-          </div>
-        </div>
 
-        <div class="col-md-6" style="margin-top: 87px; color: #1f414d;">
-            <div id="resultMessage" style="display: none; color:#377c85; font-size: 19px;  font-weight: 600;"></div>
-        </div>
-    </div>
     </div>
 
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -195,15 +176,13 @@
             var markers = []; // Array per mantenere traccia dei marker
         
             // Inizializza la mappa con una posizione di default
-            var map = L.map('map').setView([{{ irrigatore.latitudine }}, {{ irrigatore.longitudine }}], 12);
+            var map = L.map('map').setView([41, 12], 5);
         
             document.getElementById('toggleMapClick').addEventListener('click', function () {
                 mapClickEnabled = !mapClickEnabled;
             });
 
-            var irrigatoreMarker = L.marker([{{ irrigatore.latitudine }}, {{ irrigatore.longitudine }}]).addTo(map);
-            irrigatoreMarker.bindPopup('<b>{{ irrigatore.nome }}</b><br>Latitude: {{ irrigatore.latitudine }}<br>Longitude: {{ irrigatore.longitudine }}').openPopup();
-
+            
 
             document.getElementById('id_latitudine').addEventListener('input', function () {
                 var newLat = parseFloat(this.value);
@@ -211,6 +190,7 @@
                 updateIrrigatoreMarkerPosition(newLat, newLon);
             });
         
+            irrigatoreMarker= null;
             document.getElementById('id_longitudine').addEventListener('input', function () {
                 var newLat = parseFloat(document.getElementById('id_latitudine').value);
                 var newLon = parseFloat(this.value);
@@ -223,12 +203,15 @@
                     var lon = e.latlng.lng;
         
                     // Rimuovi tutti i marker esistenti dalla mappa
-                    map.removeLayer(irrigatoreMarker);
+                    if(irrigatoreMarker){
+                        map.removeLayer(irrigatoreMarker);
+                    }
+                    
                     
         
                     // Crea un marker con le coordinate e aggiungilo alla mappa
                     irrigatoreMarker = L.marker([lat, lon])
-                        .bindPopup("Nome: " + {{irrigatotere.nome}} + "<br>ID: " + {{irrigatore.id}})
+                        
                         .addTo(map);
         
                     // Aggiorna i valori dei campi di latitudine e longitudine nel form
@@ -252,7 +235,13 @@
         
             // Funzione per aggiornare la posizione dell'irrigatoreMarker
             function updateIrrigatoreMarkerPosition(lat, lon) {
-                irrigatoreMarker.setLatLng([lat, lon]);
+                if(irrigatoreMarker){
+                    map.removeLayer(irrigatoreMarker);
+                }
+
+                irrigatoreMarker = L.marker([lat, lon])
+                        
+                .addTo(map);
                 irrigatoreMarker.bindPopup('<b>{{ irrigatore.nome }}</b><br>Latitude: ' + lat + '<br>Longitude: ' + lon).openPopup();
             }
         
@@ -271,49 +260,7 @@
         
         
 
-        <script>
-            seconds = 0;
-        
-            function sprinkle() {
-                var sprinklerId = {{irrigatore.id}};
-                var duration = document.getElementById('duration').value;
-        
-                // Utilizza la funzione url di Django per generare il link completo
-                var url = "{% url 'celery_sprinkle' 0 0 %}".replace('0', sprinklerId).replace('0', duration);
-        
-                // Chiamata AJAX per inviare i dati al server
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        var resultMessage = document.getElementById('resultMessage');
-                        resultMessage.innerHTML = 'sprinkling';
-                        resultMessage.style.display = 'block';
-                        seconds=data.result;
-                        // Funzione per aggiornare i puntini dinamici
-                        function updateDots() {
-                            if  (resultMessage.innerHTML=='sprinkling...'){
-                                resultMessage.innerHTML='sprinkling';
-                            }else{
-                                var dots = '.';
-                                resultMessage.innerHTML += dots;
-                            }
-                            console.log('qua')
-                        }
-        
-                        // Aggiorna i puntini ogni secondo
-                        var interval = setInterval(function () {
-                            updateDots();
-                        }, 1000);
-        
-                        // Nascondi il messaggio dopo 3 secondi
-                        setTimeout(function () {
-                            clearInterval(interval); // Interrompi l'aggiornamento dei puntini
-                            resultMessage.style.display = 'none';
-                        }, 1000*seconds);
-                    })
-                    .catch(error => console.error('Errore:', error));
-            }
-        </script>
+    
         
         
 {% endblock %}

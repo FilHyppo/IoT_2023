@@ -14,6 +14,8 @@ urlpatterns = [
     path('aggiungi_irrigatore/', AggiungiIrrigatoreView.as_view(), name='aggiungi_irrigatore'),
     path('hygrometer/<int:igrometro_id>/', igrometro_detail_and_edit, name='igrometro_detail_and_edit'),
     path('master/<int:master_id>/', master_detail_and_edit, name='master_detail_and_edit'),
-    path('sprinkler/<int:sprinkler_id>/', sprinkler_detail_and_edit, name='sprinkler_detail_and_edit')
+    path('sprinkler/<int:sprinkler_id>/', sprinkler_detail_and_edit, name='sprinkler_detail_and_edit'),
+    path('profile/', view_profile, name='view_profile'),
+    path('add_sprinkler/', add_sprinkler, name='add_sprinkler'),
 ]
 

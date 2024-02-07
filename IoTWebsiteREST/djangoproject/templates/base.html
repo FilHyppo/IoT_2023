@@ -49,7 +49,7 @@
         <!-- Navbar Start -->
         <div class="container-fluid nav-bar bg-transparent">
             <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
-                <a href="index.html" class="navbar-brand d-flex align-items-center text-center">
+                <a href="{% url 'website:homepage' %}" class="navbar-brand d-flex align-items-center text-center">
                     <div >
                         <img  src='{% static "img/logo.png" %}' alt="Icon" style="width: 60px; height: 60px;">
                     </div>
@@ -80,7 +80,12 @@
                             </div>
                         </div>
                         <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'website:view_profile' %}" class="nav-item nav-link {% if request.path == '/profile/' %}active{% endif %}">Profile</a>
+                        {%endif%}
                     </div>
+
+                    
                    {% if user.is_authenticated %}
                     <a href="{% url 'website:logout' %}" class="btn btn-primary px-3 d-none d-lg-flex">Log out</a>
                 {% else %}

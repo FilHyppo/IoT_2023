@@ -1,0 +1,150 @@
+
+
+
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Master e Igrometri sulla Mappa{% endblock %}
+{% block head %}
+<style>
+    /* Stile per la barra di scorrimento */
+    .scrollable-container {
+        overflow: auto;
+        max-height: 300px; /* Imposta un'altezza massima per la visualizzazione della scrollbar */
+        border: 0px solid #ccc; /* Opzionale: bordo per migliorare la visualizzazione */
+        padding: 10px; /* Opzionale: spazio interno per una migliore presentazione */
+    }
+    .scrollable-container::-webkit-scrollbar {
+            width: 12px;
+        }
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background-color: #1f414d;
+            border-radius: 10px;
+        }
+        .scrollable-container::-webkit-scrollbar-track {
+            background-color: #377c85;
+            border-radius: 10px;
+        }
+    table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+</style>
+<link href='{% static "css/forms.css" %}' rel="stylesheet">'
+{% endblock %}
+{% block content %}
+<div class="container-fluid header bg-white p-0">
+            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+                <div class="col-md-6 p-5 mt-lg-5">
+                    <h1 class="display-5 animated fadeIn mb-4">User Profile <span class="text-primary"></span>  </h1>
+                    <p class="animated fadeIn mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet
+                        sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
+                </div>
+                <div class="col-md-6 animated fadeIn">
+                    <img class="img-fluid" src='{% static "img/profilo.jpeg" %}' alt="">
+ 
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+
+
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mx-auto" style="padding: 80px;">
+                    
+        
+                    <form method="post">
+                        {% csrf_token %}
+        
+                        <div class="form-row">
+                            <div class="form-group col-md-12 mb-3">
+                                <label for="{{ form.nome.id }}" style="color: #377c85;">Username:</label>
+                                {{ form.username }}
+                            </div>
+                            <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
+                                <label for="{{ form.longitudine.id }}" style="color: #377c85;">Email:</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="form-group col-md-12 mb-3" >
+                                <label for="{{ form.latitudine.id }}" style="color: #377c85;">First name:</label>
+                                {{ form.first_name }}
+                            </div>
+        
+                            <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
+                                <label for="{{ form.longitudine.id }}" style="color: #377c85;">Last name:</label>
+                                {{ form.last_name }}
+                            </div>
+
+                            <div class="form-group col-md-12 mb-7" style="margin-top: 30px;">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                
+                            </div>
+                        </div>
+                 
+        
+                        
+                    </form>
+  
+                </div>
+        
+                <div class="col-md-6" style="margin-top:59px; color: #1f414d;">
+                    <div class="row ">
+                        <div class="col-md-6" style=" color: #1f414d;">
+                    <h2 style="margin:auto; text-align: center;">Sprinklers:</h2>
+                        </div>
+                        <div class="col-md-6" style="color: #1f414d;margin-top: 4px;">
+                          <button type="button" class="btn btn-primary" style="height: 37px; background-color: #1f414d;" onclick="window.location.href='{% url 'website:add_sprinkler' %}'">Add sprinkler</button>
+
+                        </div>
+                    </div>
+                    
+                    <div class="scrollable-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>ID</th>
+                                    <th>Creation Date</th>
+                                    <!-- Aggiungi altri attributi secondo necessità -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for irrigatore in irrigatori %}
+                                    <tr>
+                                        <td><a href="/sprinkler/{{irrigatore.id}}" style="color: #138a6e; text-decoration: none;"> {{ irrigatore.nome }}</a></td>
+                                        <td>{{ irrigatore.id }}</td>
+                                        <td>{{ irrigatore.data_creazione }}</td>
+                                        <!-- Aggiungi altri valori degli attributi secondo necessità -->
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                   
+                </div>
+            </div>
+            
+        </div>
+
+        
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+      
+        
+
+        
+{% endblock %}
+
