@@ -5,12 +5,6 @@ from djangoproject.celery import debug_task
 from django.conf import settings
 from .MQTT_client import MQTT_client
 
-def celery_test(request):
-    a = int(request.GET.get('a', 0))
-    b = int(request.GET.get('b', 0))
-    result = tasks.add.delay(a, b)
-    print("Celery test executed")
-    return JsonResponse({'status': 'OK', 'result': result.get(timeout=1)})
 
 def celery_sprinkle(request, sprinkler_id, duration):
     # Ora puoi usare sprinkler_id e duration nella tua logica per attivare lo sprinkler per la durata specificata

@@ -266,21 +266,25 @@ MQTT_QOS = 0
 MQTT_USERNAME = '' #get_secret('MQTT_USERNAME')
 MQTT_PASSWORD = '' #get_secret('MQTT_PASSWORD')
 MQTT_CLIENT_ID = 'django_mqtt_client'
-MQTT_TOPIC1 = 'igrometro/+'
-MQTT_TOPIC2 = 'irrigatore/+'
+MQTT_TOPIC_IRRIGATORE = 'irrigatore/'
 
 
 #CELERY configuration
 #TODO per Filippo mettere indirizzo 127.0.0.1
-WSL_IP_ADDR = '172.27.22.142'
+WSL_IP_ADDR = get_secret('REDIS_SERVER_IP_ADDR')
 CELERY_BROKER_URL = f'redis://{WSL_IP_ADDR}:6379/0'  # Sostituisci con la tua configurazione di Celery
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 #CELERY_CACHE_BACKEND = 'django-cache'
 
 
-""" CELERY_BEAT_SCHEDULE = {
-    'my-periodic-task': {
-        'task': 'mqtt_integration.tasks.periodic_task',
-        'schedule': crontab(),  # Esegui ogni minuto
+CELERY_BEAT_SCHEDULE = {
+    'refresh-misurazioni':{
+        'task': 'REST.tasks.refresh_misurazioni',
+        'schedule': crontab(),  # Esegui ogni giorno a mezzanotte
     },
-} """
+    'trigger-irrigatori': {
+        'task': 'mqtt_integration.tasks.periodic_task',
+        'schedule': crontab('*/15'),  # Esegui ogni quarto dell'ora
+    },
+    # Aggiungi altri task periodici se necessario
+}

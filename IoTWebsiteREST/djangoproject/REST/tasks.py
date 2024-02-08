@@ -25,3 +25,21 @@ def refresh_misurazioni():
 
         igrometro.misurazioni = misurazioni_recenti
         igrometro.save()
+
+@shared_task
+def trigger_irrigatori(raggio_km=10, umidita_minima=30):
+    from .models import Irrigatore, Igrometro
+    from mqtt_integration import tasks
+
+    irrigatori = Irrigatore.objects.all()
+    for irrigatore in irrigatori:
+        igrometri_associati = irrigatore.nearest_igrometri(raggio_km)
+        if len(igrometri_associati) > 0:
+            media_umidita = sum([igrometro.ultima_misurazione['umidita'] for igrometro in igrometri_associati]) / len(igrometri_associati)
+            if media_umidita < umidita_minima:
+                tasks.sprinkle.delay(irrigatore.id, umidita_minima - media_umidita)
+                print(f'Avviato irrigazione per {irrigatore.nome}')
+            else:
+                print(f'Irrigazione non necessaria per {irrigatore.nome}')
+        else:
+            print(f'Nessun igrometro associato a {irrigatore.nome}')
