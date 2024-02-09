@@ -100,8 +100,9 @@ class Irrigatore(models.Model):
 
     attivo = models.BooleanField(default=True)
 
+    secret = models.CharField(max_length=16, unique=True)
 
-    def nearest_igromtri(self, raggio_km):
+    def nearest_igrometri(self, raggio_km):
         igrometri_vicini = Igrometro.objects.all()
         nearest_igrometri = [
             igrometro for igrometro in igrometri_vicini

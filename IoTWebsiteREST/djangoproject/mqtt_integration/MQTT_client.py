@@ -1,10 +1,5 @@
 import paho.mqtt.client as mqtt
 from django.conf import settings
-import time
-import threading
-
-from REST import models
-
 
 class MQTT_client:
 

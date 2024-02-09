@@ -7,7 +7,7 @@ from REST.models import Irrigatore, CustomUser
 class IrrigatoreForm(forms.ModelForm):
     class Meta:
         model = Irrigatore
-        fields = ['nome', 'latitudine', 'longitudine', 'quota', 'attivo']
+        fields = ['nome', 'latitudine', 'longitudine', 'quota', 'attivo', 'secret']
 
 """ 
     latitude = forms.FloatField(required=False, widget=forms.HiddenInput())
