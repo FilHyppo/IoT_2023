@@ -13,5 +13,5 @@ def periodic_task(param=None):
     return 0
 
 @shared_task
-def sprinkle(id_irrigatore, duration):
-    send_MQTT_message(settings.MQTT_TOPIC_IRRIGATORE + str(id_irrigatore), duration)
+def sprinkle(secret, duration):
+    send_MQTT_message(settings.MQTT_TOPIC_IRRIGATORE + str(secret), duration)

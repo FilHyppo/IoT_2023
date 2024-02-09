@@ -280,11 +280,17 @@ CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_BEAT_SCHEDULE = {
     'refresh-misurazioni':{
         'task': 'REST.tasks.refresh_misurazioni',
-        'schedule': crontab(),  # Esegui ogni giorno a mezzanotte
+        'schedule': crontab(minute=0, hour=0),  # Esegui ogni giorno a mezzanotte
     },
     'trigger-irrigatori': {
-        'task': 'mqtt_integration.tasks.periodic_task',
+        'task': 'REST.tasks.trigger_irrigatori',
         'schedule': crontab('*/15'),  # Esegui ogni quarto dell'ora
     },
     # Aggiungi altri task periodici se necessario
 }
+
+
+
+#Irrigazione logic
+UMIDITA_MINIMA_IRRIGAZIONE = 30  # Umidità minima per avviare l'irrigazione
+THRESHOLD_IRRIGAZIONE = ...  # Sostituisci con il valore di soglia per l'irrigazione
