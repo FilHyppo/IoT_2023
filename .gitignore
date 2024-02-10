@@ -2,4 +2,5 @@ IoTWebsiteREST/djangoproject/db.sqlite3
 .idea/
 .vscode/
 IoTWebsiteREST/djangoproject/secrets.json
+Arduino/mqtt_client/secrets.h
 **/__pycache__/
