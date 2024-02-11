@@ -13,6 +13,10 @@ def periodic_task(param=None):
     return 0
 
 @shared_task()
-def sprinkle(secret, duration):
-    #send_MQTT_message(settings.MQTT_TOPIC_IRRIGATORE + str(secret), duration)
+def sprinkle(irrigatore_id, duration):
+    from REST.models import Irrigatore
+    irrigatore = Irrigatore.objects.get(id=irrigatore_id)
+    irrigatore.irriga(duration)
+    secret = irrigatore.secret
+    send_MQTT_message(settings.MQTT_TOPIC_IRRIGATORE + str(secret), duration)
     return duration

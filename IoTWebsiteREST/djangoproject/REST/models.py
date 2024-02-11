@@ -102,6 +102,17 @@ class Irrigatore(models.Model):
 
     secret = models.CharField(max_length=16, unique=True)
 
+    ultima_irrigazione = models.DateTimeField(blank=True, null=True)
+    durata_ultima_irrigazione = models.IntegerField(blank=True, null=True)
+
+    def irriga(self, duration):
+        self.ultima_irrigazione = datetime.datetime.now()
+        self.durata_ultima_irrigazione = duration
+        self.save()
+
+    def __str__(self):
+        return self.nome
+
     def nearest_igrometri(self, raggio_km):
         igrometri_vicini = Igrometro.objects.all()
         nearest_igrometri = [
