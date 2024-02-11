@@ -3,16 +3,18 @@
 // valori sul 500 indicano terreno  bagnato (acqua = 412), sul 700 indicano terreno secco (aria = 808) e per valori più alti indicano terreno via via più secco
 #include <SPI.h>
 #include <LoRa.h>
-
+#define reset 9
+#define ss 10
 
 void setup() {
   Serial.begin(9600);
+  LoRa.setPins(ss, reset);
   pinMode(13, OUTPUT);
   while (!Serial);
 
   //Serial.println("LoRa Receiver");
 
-  if (!LoRa.begin(868E6)) {
+  if (!LoRa.begin(433E6)) {
     Serial.println("Starting LoRa failed!");
     while (1);
   }

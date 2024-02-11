@@ -3,6 +3,8 @@
 
 #include <SPI.h>
 #include <LoRa.h>
+#define reset 9
+#define ss 10
 
 const unsigned int id = 4000;
 int count = 0;
@@ -12,12 +14,13 @@ const long interval = 2000;        // Intervallo di tempo tra un ciclo e l'altro
 
 void setup() {
   Serial.begin(9600);
+  LoRa.setPins(ss, reset);
   pinMode(13, OUTPUT);
   while (!Serial);
 
   Serial.println("LoRa Sender");
 
-  if (!LoRa.begin(868E6)) {
+  if (!LoRa.begin(433E6)) {
     Serial.println("Starting LoRa failed!");
     while (1);
   }
