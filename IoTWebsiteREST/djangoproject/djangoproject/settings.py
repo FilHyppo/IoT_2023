@@ -41,7 +41,8 @@ DEBUG = True
 ALLOWED_HOSTS = ["postgredjango.ew.r.appspot.com" ,
                  'localhost',
                  "127.0.0.1",
-                 '192.168.0.65']
+                 '192.168.0.65',
+                 '6efb-2a0e-41e-a6ad-0-79e4-3cd6-34ef-9b18.ngrok-free.app']
 
 
 
