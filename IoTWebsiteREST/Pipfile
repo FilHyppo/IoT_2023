@@ -24,6 +24,8 @@ numpy = "*"
 pandas = "*"
 matplotlib = "*"
 tqdm = "*"
+scikit-learn = "*"
+
 
 [dev-packages]
 
