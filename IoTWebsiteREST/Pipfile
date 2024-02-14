@@ -19,6 +19,13 @@ django-celery-results = "*"
 redis = "*"
 flower = "*"
 geopy = "*"
+torch = "*"
+numpy = "*"
+pandas = "*"
+matplotlib = "*"
+tqdm = "*"
+scikit-learn = "*"
+
 
 [dev-packages]
 

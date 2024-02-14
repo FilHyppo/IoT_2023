@@ -37,7 +37,7 @@ def trigger_logic(id_irrigatore):
                               for igrometro in igrometri_associati]) / len(igrometri_associati)
         print(f'Media umidità: {media_umidita} per {irrigatore.nome}')
         if media_umidita < settings.UMIDITA_MINIMA_IRRIGAZIONE:
-            tasks.sprinkle.delay(irrigatore.secret, settings.UMIDITA_MINIMA_IRRIGAZIONE - media_umidita)
+            tasks.sprinkle.delay(irrigatore.id, settings.UMIDITA_MINIMA_IRRIGAZIONE - media_umidita)
             print(f'Avviato irrigazione per {irrigatore.nome}')
         else:
             print(f'Irrigazione non necessaria per {irrigatore.nome}')
