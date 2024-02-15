@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.shortcuts import get_object_or_404, redirect, render
@@ -5,7 +6,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.views import View
 from .forms import IgrometroForm, IrrigatoreForm, MasterForm, CustomUserForm
 from REST.models import Igrometro, Irrigatore, MasterIgrometri
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
@@ -95,7 +96,7 @@ class AggiungiIrrigatoreView(View):
 
 
 # views.py
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views import View
 
 from django.http import JsonResponse
@@ -172,8 +173,10 @@ class MasterIgrometriSearchView(View):
         }
         return JsonResponse(result_dict, safe=False)
     
-
 def igrometro_detail_and_edit(request, igrometro_id):
+    if not is_admin(request.user):
+        messages.error(request, "You need to be admin in order to get there")
+        return HttpResponseRedirect(reverse('website:lista_master'))
     igrometro = get_object_or_404(Igrometro, id=igrometro_id)
     if request.method == 'POST':
         form = IgrometroForm(request.POST, instance=igrometro)
@@ -187,6 +190,9 @@ def igrometro_detail_and_edit(request, igrometro_id):
 
 
 def master_detail_and_edit(request, master_id):
+    if not is_admin(request.user):
+        messages.error(request, "You need to be admin in order to get there")
+        return HttpResponseRedirect(reverse('website:lista_master'))
     master = get_object_or_404(MasterIgrometri, id=master_id)
     igrometri = Igrometro.objects.filter(master=master)
     print(igrometri)
@@ -199,6 +205,7 @@ def master_detail_and_edit(request, master_id):
         form = MasterForm(instance=master)
 
     return render(request, 'master.html', {'master': master, 'form': form, 'igrometri':igrometri})
+
 
 def sprinkler_detail_and_edit(request, sprinkler_id):
     irrigatore = get_object_or_404(Irrigatore, id=sprinkler_id)

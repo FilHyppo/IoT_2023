@@ -10,8 +10,7 @@
             <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
                 <div class="col-md-6 p-5 mt-lg-5">
                     <h1 class="display-5 animated fadeIn mb-4">Search the hygrometers usign this <span class="text-primary">Map</span>  </h1>
-                    <p class="animated fadeIn mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet
-                        sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
+                    <p class="animated fadeIn mb-4 pb-2">Check where the hygrometers and their respective masters are located, enter the name, ID, and type in the search section. Click on the results for more details.</p>
                 </div>
                 <div class="col-md-6 animated fadeIn">
                     <img class="img-fluid" src='{% static "img/mappa2.jpeg" %}' alt="">
@@ -21,7 +20,18 @@
             </div>
         </div>
         <!-- Header End -->
-
+        {% if messages %}
+        <ul class="messages" style="padding-left:0px;">
+            {% for message in messages|slice:1 %}
+            {% if message.message == "You need to be admin in order to get there" %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}     
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+        </ul>
+        {% endif %}
 <!-- Search Start -->
 <div class="container-xxl py-5" style="width: 100%; padding-left: 0px; padding-right: 0px;padding-top: 0px !important; background-color: #0b5966 !important;"></div>
 <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px; background-color: #1f414d !important; margin-top: -42px;">

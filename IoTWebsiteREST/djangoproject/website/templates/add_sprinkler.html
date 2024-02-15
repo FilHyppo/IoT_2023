@@ -77,8 +77,7 @@
             <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
                 <div class="col-md-6 p-5 mt-lg-5">
                     <h1 class="display-5 animated fadeIn mb-4">Sprinkler details <span class="text-primary"></span>  </h1>
-                    <p class="animated fadeIn mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet
-                        sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
+                    <p class="animated fadeIn mb-4 pb-2">Make sure to fill out all the fields when adding sprinkler data. You can use the map to enter the exact longitude and latitude. Don't forget to add the identification code found on the back of the product.</p>
                 </div>
                 <div class="col-md-6 animated fadeIn">
                     <img class="img-fluid" src='{% static "img/irrigatore.jpeg" %}' alt="">
@@ -117,16 +116,16 @@
                                 <label for="{{ form.longitudine.id }}" style="color: #377c85;">Quota:</label>
                                 {{ form.quota }}
                             </div>
+                            
+                            <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
+                                <label for="{{ form.secret.id }}" style="color: #377c85;">Identification code:</label>
+                                    {{ form.secret }}
+                                
+                            </div>
                             <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
                                 <label for="{{ form.attivo.id }}" style="color: #377c85;">Is active:</label>
                                 <div style="display: inline-block; vertical-align: middle;">
                                     {{ form.attivo }}
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12 mb-3" style="margin-top: 20px;">
-                                <label for="{{ form.secret.id }}" style="color: #377c85;">Codice sul retro:</label>
-                                <div style="display: inline-block; vertical-align: middle;">
-                                    {{ form.secret }}
                                 </div>
                             </div>
                             <div class="form-group col-md-12 mb-7" style="margin-top: 30px;">
