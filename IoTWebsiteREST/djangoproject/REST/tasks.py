@@ -3,7 +3,6 @@ from django.utils import timezone
 from django.conf import settings
 import datetime
 
-
 @shared_task
 def refresh_misurazioni():
     from .models import Igrometro
@@ -24,25 +23,45 @@ def refresh_misurazioni():
         igrometro.misurazioni = misurazioni_recenti
         igrometro.save()
 
+def get_lista_umidita(igrometri_associati):
+    lista_umidita = []
+    for igrometro in igrometri_associati:
+        misurazioni = igrometro.misurazioni
+        #ogni misurazione è un dizionario con chiave 'data' e 'umidita'
+        #filtra le misrazioni più recenti di un giorni
+        misurazioni_recenti = [
+            misurazione for misurazione in misurazioni
+            if isinstance(misurazione, dict) and 'data' in misurazione and
+               (timezone.now() - timezone.make_aware(datetime.datetime.fromisoformat(misurazione['data']))).days < 1
+        ]
+        #estrae solo i valori di umidità
+        umidita = [misurazione['umidita'] for misurazione in misurazioni_recenti]
+        #aggiunge la media delle misurazioni recenti alla lista
+        lista_umidita.append(sum(umidita)/len(umidita))
+    return lista_umidita
+
+
 @shared_task
 def trigger_logic(id_irrigatore):
     from .models import Irrigatore
     from mqtt_integration import tasks
+    from AI import tasks as ai_tasks
+
     irrigatore = Irrigatore.objects.get(id=id_irrigatore)
     igrometri_associati = irrigatore.nearest_igrometri(raggio_km=10)
-    print(f'Trovati {len(igrometri_associati)} igrometri associati a {irrigatore.nome}')
     if len(igrometri_associati) > 0:
-        prediction = ...
-        media_umidita = sum([igrometro.ultima_misurazione['umidita'] if igrometro.ultima_misurazione else 0
-                              for igrometro in igrometri_associati]) / len(igrometri_associati)
-        print(f'Media umidità: {media_umidita} per {irrigatore.nome}')
-        if media_umidita < settings.UMIDITA_MINIMA_IRRIGAZIONE:
-            tasks.sprinkle.delay(irrigatore.id, settings.UMIDITA_MINIMA_IRRIGAZIONE - media_umidita)
-            print(f'Avviato irrigazione per {irrigatore.nome}')
-        else:
-            print(f'Irrigazione non necessaria per {irrigatore.nome}')
+        lista_umidita = get_lista_umidita(igrometri_associati)
+        prediction = ai_tasks.predict_duration(
+            lista_umidita=lista_umidita,
+            lat=irrigatore.latitudine,
+            lon=irrigatore.longitudine,
+            date=timezone.now()
+        )
+        
+        tasks.sprinkle.delay(irrigatore.id, prediction)
+        #print(f'Avviato irrigazione per {irrigatore.nome}')
     else:
-        print(f'Nessun igrometro associato a {irrigatore.nome}')
+        print(f'WARNING: Nessun igrometro associato a {irrigatore.nome}')
 
 
 @shared_task

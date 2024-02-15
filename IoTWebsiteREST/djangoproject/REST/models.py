@@ -1,4 +1,4 @@
-import datetime
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from geopy.distance import geodesic
@@ -106,7 +106,7 @@ class Irrigatore(models.Model):
     durata_ultima_irrigazione = models.IntegerField(blank=True, null=True)
 
     def irriga(self, duration):
-        self.ultima_irrigazione = datetime.datetime.now()
+        self.ultima_irrigazione = timezone.now()
         self.durata_ultima_irrigazione = duration
         self.save()
 
@@ -116,7 +116,11 @@ class Irrigatore(models.Model):
     def nearest_igrometri(self, raggio_km):
         igrometri_vicini = Igrometro.objects.all()
         nearest_igrometri = [
-            igrometro for igrometro in igrometri_vicini
+            (igrometro, geodesic((self.latitudine, self.longitudine), (igrometro.latitudine, igrometro.longitudine)).km)  
+            for igrometro in igrometri_vicini
             if geodesic((self.latitudine, self.longitudine), (igrometro.latitudine, igrometro.longitudine)).km <= raggio_km
         ]
+        #order by distance
+        nearest_igrometri.sort(key=lambda x: x[1])
+        nearest_igrometri = [igrometro for igrometro, _ in nearest_igrometri]
         return nearest_igrometri
