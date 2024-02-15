@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import user_passes_test
 from django.views import View
-from .forms import IgrometroForm, IrrigatoreForm, MasterForm, CustomUserForm
+from .forms import AddIrrigatoreForm, IgrometroForm, IrrigatoreForm, MasterForm, CustomUserForm
 from REST.models import Igrometro, Irrigatore, MasterIgrometri
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -211,11 +211,12 @@ def sprinkler_detail_and_edit(request, sprinkler_id):
     irrigatore = get_object_or_404(Irrigatore, id=sprinkler_id)
     if request.method == 'POST':
         form = IrrigatoreForm(request.POST, instance=irrigatore)
+        print(form)
         if form.is_valid():
             form.save()
             return render(request, 'irrigatore.html', {'irrigatore': irrigatore, 'form': form})
     else:
-        form = IrrigatoreForm(instance=irrigatore)
+        form = IrrigatoreForm(instance=irrigatore) 
 
     return render(request, 'irrigatore.html', {'irrigatore': irrigatore, 'form': form})
 
@@ -239,13 +240,13 @@ def view_profile(request):
 @login_required
 def add_sprinkler(request):
     if request.method == 'POST':
-        form = IrrigatoreForm(request.POST)
+        form = AddIrrigatoreForm(request.POST)
         if form.is_valid():
             irrigatore = form.save(commit=False)
             irrigatore.user = request.user  # Imposta l'utente corrente come proprietario dell'irrigatore
             irrigatore.save()
             return redirect('website:view_profile')  # Redirect to profile page after adding sprinkler
     else:
-        form = IrrigatoreForm()
+        form = AddIrrigatoreForm()
     
     return render(request, 'add_sprinkler.html', {'form': form})

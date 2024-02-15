@@ -7,16 +7,15 @@ from REST.models import Irrigatore, CustomUser
 class IrrigatoreForm(forms.ModelForm):
     class Meta:
         model = Irrigatore
+        fields = ['nome', 'latitudine', 'longitudine', 'quota', 'attivo']
+
+
+class AddIrrigatoreForm(forms.ModelForm):
+    class Meta:
+        model = Irrigatore
         fields = ['nome', 'latitudine', 'longitudine', 'quota', 'attivo', 'secret']
 
-""" 
-    latitude = forms.FloatField(required=False, widget=forms.HiddenInput())
-    longitude = forms.FloatField(required=False, widget=forms.HiddenInput())   def save(self, request):
-        user = super(CustomSignupForm, self).save(request)
 
-        user.save()
-        return user
- """
 
 from django import forms
 from REST.models import Igrometro, MasterIgrometri
