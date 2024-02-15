@@ -285,7 +285,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'trigger-irrigatori': {
         'task': 'REST.tasks.trigger_irrigatori',
-        'schedule': crontab(),  # Esegui ogni quarto dell'ora'*/15'
+        'schedule': crontab('*/15'),  # Esegui ogni quarto dell'ora
     },
     # Aggiungi altri task periodici se necessario
 }
