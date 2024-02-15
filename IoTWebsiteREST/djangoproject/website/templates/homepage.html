@@ -7,9 +7,8 @@
             <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
                 <div class="col-md-6 p-5 mt-lg-5">
                     <h1 class="display-5 animated fadeIn mb-4">Nature and Tech Harmony: <span class="text-primary">Unveiling the Future</span>  with HygroPro</h1>
-                    <p class="animated fadeIn mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet
-                        sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
-                    <a href="" class="btn btn-primary py-3 px-5 me-3 animated fadeIn">Get Started</a>
+                    <p class="animated fadeIn mb-4 pb-2">Connect with nature, save water, and keep green spaces healthy. Discover a new way to take care of the environment.</p>
+                    <a  href="{% url 'account_signup' %}" class="btn btn-primary py-3 px-5 me-3 animated fadeIn">Get Started</a>
                 </div>
                 <div class="col-md-6 animated fadeIn">
                     <div class="owl-carousel header-carousel">
@@ -73,6 +72,48 @@
                         </a>
                     </div>
                 </div>
+                <div class="row g-4" style="margin-top: 1px;">
+                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                        <a class="cat-item d-block bg-light text-center rounded p-3" href="https://mqtt.org/" style="color: green; text-decoration: underline;">
+                            <div class="rounded p-4">
+                                <div class="icon mb-3">
+                                    <img class="img-fluid" src='{% static "img/mqtt2.png" %}'alt="Icon" style="padding-bottom: 15px; padding-top: 15px;">
+                                </div>
+                                <h6>Mqtt</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <a class="cat-item d-block bg-light text-center rounded p-3" href="https://redis.io/" style="color: green; text-decoration: underline;">
+                            <div class="rounded p-4">
+                                <div class="icon mb-3">
+                                    <img class="img-fluid" src='{% static "img/redis.png" %}' alt="Icon">
+                                </div>
+                                <h6>Redis</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <a class="cat-item d-block bg-light text-center rounded p-3" href="https://www.openstreetmap.org/" style="color: green; text-decoration: underline;">
+                            <div class="rounded p-4">
+                                <div class="icon mb-3">
+                                    <img class="img-fluid" src='{% static "img/openstreetmap.png" %}' alt="Icon">
+                                </div>
+                                <h6>OpenStreetMap</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                        <a class="cat-item d-block bg-light text-center rounded p-3" href="https://docs.celeryq.dev/en/stable/" style="color: green; text-decoration: underline;">
+                            <div class="rounded p-4">
+                                <div class="icon mb-3">
+                                    <img class="img-fluid" src='{% static "img/celery.png" %}' alt="Icon">
+                                </div>
+                                <h6>Celery</h6>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -91,10 +132,10 @@
                     </div>
                     <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                         <h1 class="mb-4">Connected with the Future</h1>
-                        <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                        <p><i class="fa fa-check text-primary me-3"></i>Tempor erat elitr rebum at clita</p>
-                        <p><i class="fa fa-check text-primary me-3"></i>Aliqu diam amet diam et eos</p>
-                        <p><i class="fa fa-check text-primary me-3"></i>Clita duo justo magna dolore erat amet</p>
+                        <p class="mb-4">Out technology uses AI in order to predict the right amount of water needed in your zone. </p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Register the sprinklers</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Connect them to the Internet</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Enjoy the automation of our technology</p>
                         <a class="btn btn-primary py-3 px-5 mt-3" href="">Read More</a>
                     </div>
                 </div>
@@ -118,7 +159,7 @@
                             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                                 <div class="mb-4">
                                     <h1 class="mb-3">Contact us</h1>
-                                    <p>Eirmod sed ipsum dolor sit rebum magna erat. Tempor lorem kasd vero ipsum sit sit diam justo sed vero dolor duo.</p>
+                                    <p>Do not hesitate to contact us to clarify any doubts and to use our technology.</p>
                                 </div>
                                 <a href="" class="btn btn-primary py-3 px-4 me-2"><i class="fa fa-phone-alt me-2"></i>Make A Call</a>
                                 <a href="" class="btn btn-dark py-3 px-4"><i class="fa fa-calendar-alt me-2"></i>Get Appoinment</a>
