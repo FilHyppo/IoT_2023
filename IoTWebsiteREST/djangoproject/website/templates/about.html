@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About us{% endblock %}
+{% block head %}
+<style>
+        .rounded-img {
+      border-radius: 50%;
+      max-width: 150px;
+      height: auto;
+    }
+</style>
+
+{% endblock %}
+{% block content %}
+<div class="container-fluid header bg-white p-0  display-5 animated fadeIn mb-4">
+  <img class="img-fluid" src='{% static "img/about2.jpg" %}' alt="">
+</div>
+
+<!-- Developers Section -->
+<section class="container my-5 animated fadeIn">
+    <div class="row flex-row">
+      <!-- Developer 3 -->
+      <div class="col-lg-4 text-center flex-column">
+        <h2 style="color: #0b5966;"> Filippo Bologna</h2>
+        <img src='{% static "img/fillo.webp" %}' alt="Developer 3" class="rounded-img mb-3">        
+      </div>
+      <div class="col-lg-7  flex-column" style="margin-top: 60px;">
+        <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mi      
+        </p>
+      </div> 
+    </div>
+</section>
+<section class="container my-5 animated fadeIn" >
+  <div class="row flex-row">
+    <!-- Developer 3 -->
+    <div class="col-lg-4 text-center flex-column">
+      <h2 style="color: #0b5966;">Lorenzo Corradi</h2>
+      <img src="{% static "img/cordani.jpg" %}" alt="Developer 3" class="rounded-img mb-3">        
+    </div>
+    <div class="col-lg-7  flex-column" style="margin-top: 60px;">
+      <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mi      
+      </p>
+    </div> 
+  </div>
+</section>
+<section class="container my-5 animated fadeIn">
+  <div class="row flex-row">
+    <!-- Developer 3 -->
+    <div class="col-lg-4 text-center flex-column">
+      <h2 style="color: #0b5966;">Marco Morini</h2>
+      <img src='{% static "img/pollini.jpg" %}' alt="Developer 3" class="rounded-img mb-3">        
+    </div>
+    <div class="col-lg-7  flex-column" style="margin-top: 60px;">
+      <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mi      
+      </p>
+    </div> 
+  </div>
+</section>
+
+
+
+{% endblock %}

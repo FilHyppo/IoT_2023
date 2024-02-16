@@ -17,5 +17,6 @@ urlpatterns = [
     path('sprinkler/<int:sprinkler_id>/', sprinkler_detail_and_edit, name='sprinkler_detail_and_edit'),
     path('profile/', view_profile, name='view_profile'),
     path('add_sprinkler/', add_sprinkler, name='add_sprinkler'),
+    path('about/', about, name='about'),
 ]
 

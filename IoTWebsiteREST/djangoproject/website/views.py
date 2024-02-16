@@ -250,3 +250,9 @@ def add_sprinkler(request):
         form = AddIrrigatoreForm()
     
     return render(request, 'add_sprinkler.html', {'form': form})
+
+
+
+
+def about(request):
+    return render(request, 'about.html')

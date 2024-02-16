@@ -62,11 +62,13 @@
                     <div class="navbar-nav ms-auto">
                         <a href="{% url 'website:homepage' %}" class="nav-item nav-link {% if request.path == '/homepage/' %}active{% endif %}">Home</a>
                         <a href="{% url 'website:lista_master' %}" class="nav-item nav-link {% if request.path == '/lista_master/' %}active{% endif %}">Map</a>
+                        
                     
                     
 
                         
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        <a href="#" class="nav-item nav-link">Contact</a>
+                        <a href="{% url 'website:about' %}" class="nav-item nav-link {% if request.path == '/about/' %}active{% endif %}">About us</a>
                         {% if user.is_authenticated %}
                         <a href="{% url 'website:view_profile' %}" class="nav-item nav-link {% if request.path == '/profile/' %}active{% endif %}">Profile</a>
                         {%endif%}
