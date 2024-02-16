@@ -5,11 +5,11 @@ import torch
 from torch import nn
 #from rnn import RNN
 
-def predict(lista_umidita, lat, lon, day_sin, day_cos, year_sin, year_cos):
+def predict(lista_umidita, lat, lon, day_sin, day_cos, year_sin, year_cos, duration):
     #model = torch.load('rnn_model.pth')
     #model.eval()
     with torch.no_grad():
-        input = [u for u in lista_umidita] + [1, lat, lon, day_sin, day_cos, year_sin, year_cos]
+        input = [u for u in lista_umidita] + [1, lat, lon, day_sin, day_cos, year_sin, year_cos, duration]
         #rendilo un tensore
         input_tensor = torch.tensor(input, dtype=torch.float32)
         print(f'input_tensor: {input_tensor}')
