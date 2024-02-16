@@ -4,13 +4,17 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 
-num_rows = 10000  # valori nel dataset
+num_rows = 100000  # valori nel dataset
 
-umidita = [random.randint(0, 100) for _ in range(num_rows)]
+umidita = [random.randint(5, 45) for _ in range(num_rows)]
 
 latitudine = [random.uniform(-90, 90) for _ in range(num_rows)]
 
 longitudine = [random.uniform(-180, 180) for _ in range(num_rows)]
+
+durata = [max(0, 100 - (3 * sm)) * 10 for sm in umidita]  #durata in secondi
+
+
 
 start_date = datetime.now() - timedelta(days=5 * 365)
 end_date = datetime.now()
@@ -35,7 +39,8 @@ df = pd.DataFrame({
     'Day sin': day_sin,
     'Day cos': day_cos,
     'Year sin': year_sin,
-    'Year cos': year_cos
+    'Year cos': year_cos,
+    'Durata (s)': durata
 })
 
 # Stampa le prime righe del DataFrame per debug
@@ -45,6 +50,7 @@ print(df.head())
 df.to_csv('dataset_rnn.csv', index=False)
 
 ################################## creazione modello RNN################################################
+
 import torch
 import torch.nn as nn
 import pandas as pd
@@ -62,9 +68,9 @@ train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
 class RNNDataset(Dataset):
     def __init__(self, dataframe):
         self.data = dataframe[
-            ['Umidità (%)', 'Latitudine', 'Longitudine', 'Day sin', 'Day cos', 'Year sin', 'Year cos']].values.astype(
+            ['Umidità (%)', 'Latitudine', 'Longitudine', 'Day sin', 'Day cos', 'Year sin', 'Year cos', 'Durata (s)']].values.astype(
             np.float32)
-        self.targets = dataframe['Umidità (%)'].values.astype(np.float32)
+        self.targets = dataframe['Durata (s)'].values.astype(np.float32)
 
     def __len__(self):
         return len(self.data)
@@ -73,9 +79,6 @@ class RNNDataset(Dataset):
         return self.data[idx], self.targets[idx]
 
     # rete neurale
-
-    # rete neurale
-
 
 class RNN(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
@@ -92,8 +95,8 @@ class RNN(nn.Module):
 
 
 # Definisci i parametri
-input_size = 7  # Numero di features
-hidden_size = 64
+input_size = 8  # Numero di features
+hidden_size = 128 #64
 output_size = 1
 
 # inizializza modello, la loss function e l'ottimizzatore
@@ -139,25 +142,27 @@ torch.save(model.state_dict(), 'rnn_model.pth')
 
 # Test del modello
 sample_input = torch.tensor(
-    [[50, 0.5, 0.5, 0.5, 0.5]])  # Esempio di input con umidità del 50% e segnali sinusoidali casuali
+    [[19, 66.332336, -46.022097, 0.205003, -0.978761, -0.813538, -0.581512,
+      430]])  # Esempio di input con umidità del 50% e segnali sinusoidali casuali
+
+# 19   66.332336   -46.022097  0.205003   -0.978761 -0.813538   -0.581512    430
+
+# Valuta il modello
 model.eval()
 with torch.no_grad():
     output = model(sample_input)
-    predicted_humidity = output.item()
+    predicted_duration = output.item()
 
-# Calcola la quantità di irrigazione
-irrigation_amount = max(0, 100 - predicted_humidity)
-print(f'Umidità prevista: {predicted_humidity:.2f}%')
-print(f'Quantità di irrigazione raccomandata: {irrigation_amount:.2f}%')
+# Visualizza la durata prevista di irrigazione
+print(f'Durata irrigazione prevista: {predicted_duration:.0f} secondi')
 
 import matplotlib.pyplot as plt
 
-# Carica il modello
+
 model = RNN(input_size, hidden_size, output_size)
 model.load_state_dict(torch.load('rnn_model.pth'))
 model.eval()
 
-# Esegui la predizione sul set di validazione
 predictions = []
 targets = []
 with torch.no_grad():
@@ -166,13 +171,16 @@ with torch.no_grad():
         predictions.extend(outputs.squeeze(1).tolist())
         targets.extend(target.tolist())
 
-# Visualizza la predizione del modello e il valore reale su un grafico
+targets = targets[::100]
+predictions = predictions[::100]
+
 plt.figure(figsize=(10, 6))
 plt.plot(targets, label='Valore reale', color='blue')
 plt.plot(predictions, label='Predizione del modello', color='red')
 plt.xlabel('Campione')
-plt.ylabel('Umidità (%)')
+plt.ylabel('Durata (sec)')
 plt.title('Predizione del modello vs Valore reale')
 plt.legend()
 plt.grid(True)
 plt.show()
+
