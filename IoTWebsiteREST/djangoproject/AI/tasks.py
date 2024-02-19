@@ -18,7 +18,7 @@ class RNN(nn.Module):
         return out
 
 
-def predict(lista_umidita, lat, lon, day_sin, day_cos, year_sin, year_cos):
+def predict(lista_umidita, lat, lon, day_sin, day_cos, year_sin, year_cos, durata):
     input_size = 17  # Numero di features
     hidden_size = 128
     output_size = 1
@@ -27,7 +27,7 @@ def predict(lista_umidita, lat, lon, day_sin, day_cos, year_sin, year_cos):
     model.load_state_dict(params)
     model.eval()
     with torch.no_grad():
-        input = [u for u in lista_umidita] + [1, lat, lon, day_sin, day_cos, year_sin, year_cos]
+        input = [u for u in lista_umidita] + [durata, lat, lon, day_sin, day_cos, year_sin, year_cos]
         #rendilo un tensore
         input_tensor = torch.tensor([input], dtype=torch.float32)
         #print(f'input_tensor: {input_tensor}')
@@ -57,11 +57,11 @@ def sinusoidal_date(date):
     
     return day_sin, day_cos, year_sin, year_cos
 
-def predict_duration(lista_umidita,lat, lon, date):
+def predict_duration(lista_umidita,lat, lon, date, durata):
     if len(lista_umidita) < 10:
         #aggiungi in coda l'ultimo valore di umidità finché non raggiungi 10
         for _ in range(10-len(lista_umidita)):
             lista_umidita.append(lista_umidita[-1])
     day_sin, day_cos, year_sin, year_cos = sinusoidal_date(date)
-    return predict(lista_umidita, lat, lon, day_sin, day_cos, year_sin, year_cos)
+    return predict(lista_umidita, lat, lon, day_sin, day_cos, year_sin, year_cos, durata)
     

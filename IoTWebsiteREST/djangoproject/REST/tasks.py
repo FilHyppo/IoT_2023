@@ -22,7 +22,7 @@ def meteo_logic(prediction, previsione: PrevisioneMeteo):
 
     info /= hour_range
     if info > 0:
-        print(f'Prevista pioggia')
+        #print(f'Prevista pioggia')
         prediction = int(prediction/ (info*10)**2) #0.1-1.0 mm/h: Leggera pioggia.; 1.0-4.0 mm/h: Pioggia moderata.; 4.0+ mm/h: Pioggia intensa o pesante.
     return prediction
 
@@ -79,7 +79,8 @@ def trigger_logic(id_irrigatore):
             lista_umidita=lista_umidita,
             lat=irrigatore.latitudine,
             lon=irrigatore.longitudine,
-            date=timezone.now()
+            date=irrigatore.ultima_irrigazione,
+            durata=irrigatore.durata_ultima_irrigazione
         )
         weather = PrevisioneMeteo(irrigatore.latitudine, irrigatore.longitudine)
         prediction = meteo_logic(prediction, weather)

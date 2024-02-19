@@ -31,7 +31,7 @@ class PrevisioneMeteo:
 
                 return {"temp": temp, "wind": wind, "rain": rain, "cloud": cloud, "weather" :self.weather_dict[weather]}
             else:
-                print(f"La data e l'ora specificate non sono disponibili")
+                #print(f"La data e l'ora specificate non sono disponibili")
                 return None
         else:
             print(f"Non è possibile ottenere le informazioni meteo")
