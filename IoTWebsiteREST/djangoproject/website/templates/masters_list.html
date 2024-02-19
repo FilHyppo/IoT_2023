@@ -156,6 +156,43 @@
     $(document).ready(function() {
         // Quando il pulsante di ricerca viene premuto
         $('.btn-dark').click(function() {
+            search();
+        });
+
+        $('input').keypress(function(event) {
+            if (event.which === 13) { // Verifica se il tasto premuto è "Invio" (codice 13)
+                event.preventDefault(); // Evita il comportamento predefinito di "Invio" che potrebbe causare il submit del form
+                search(); // Avvia la funzione di ricerca
+                var button = document.querySelector('.btn-dark');
+        
+                // Cambia il colore di sfondo quando il bottone viene cliccato
+                button.style.backgroundColor = '#349c85';
+        
+                // Ripristina il colore di sfondo originale dopo 500 millisecondi (mezzo secondo)
+                setTimeout(function() {
+                    button.style.backgroundColor = '#377c85'; // Imposta il colore di sfondo a quello predefinito
+                }, 500);
+            }
+        });
+        
+        // Aggiungi un gestore per il tasto "Invio" sulla select
+        $('select#type').keypress(function(event) {
+            if (event.which === 13) { // Verifica se il tasto premuto è "Invio" (codice 13)
+                event.preventDefault(); // Evita il comportamento predefinito di "Invio" che potrebbe causare il submit del form
+                search(); // Avvia la funzione di ricerca
+                var button = document.querySelector('.btn-dark');
+        
+                // Cambia il colore di sfondo quando il bottone viene cliccato
+                button.style.backgroundColor = '#349c85';
+        
+                // Ripristina il colore di sfondo originale dopo 500 millisecondi (mezzo secondo)
+                setTimeout(function() {
+                    button.style.backgroundColor = '#377c85'; // Imposta il colore di sfondo a quello predefinito
+                }, 500);
+            }
+        });
+
+            function search() {
             // Recupera i valori di ricerca
             var searchName = $('input').val();
             var type = $('select#type').val();
@@ -206,7 +243,7 @@
                     console.error('Errore durante la richiesta Ajax:', error);
                 }
             });
-        });
+            }
 
         // Funzione per aggiornare la mappa con i nuovi dati
         function updateMap() {

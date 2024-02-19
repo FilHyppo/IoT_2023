@@ -19,5 +19,6 @@ urlpatterns = [
     path('profile/', view_profile, name='view_profile'),
     path('add_sprinkler/', add_sprinkler, name='add_sprinkler'),
     path('about/', about, name='about'),
+    path('', homepage, name='homepage2'),
 ]
 

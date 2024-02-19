@@ -127,6 +127,7 @@ var umiditaData = lastFifteenMeasurements.map(function(misurazione) {
                         labels: labels,
                         datasets: [
                             {
+                                id:'umi',
                                 label: 'Umidità',
                                 fill: true,
                                 backgroundColor: gradient,
@@ -135,7 +136,8 @@ var umiditaData = lastFifteenMeasurements.map(function(misurazione) {
                                 data: weight,
                                 lineTension: 0.2,
                                 borderWidth: 2,
-                                pointRadius: 3
+                                pointRadius: 3,
+                    
                             }
                         ]
                     },
@@ -146,45 +148,22 @@ var umiditaData = lastFifteenMeasurements.map(function(misurazione) {
                         },
                         responsive: true,
                         legend: {
-                            display: true
+                            display: false
                         },
                         scales: {
-                            xAxes: [
-                                {
-                                    gridLines: {
-                                        display: false
-                                    },
-                                    ticks: {
-                                        padding: 10,
-                                        autoSkip: false,
-                                        maxRotation: 15,
-                                        minRotation: 15
-                                    }
-                                }
-                            ],
-                            yAxes: [
-                                {
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: "Weight in KG",
-                                        padding: 10
-                                    },
-                                    gridLines: {
-                                        display: true,
-                                        color: colors.indigo.quarter
-                                    },
-                                    ticks: {
-                                        beginAtZero: false,
-                                        max: 63,
-                                        min: 57,
-                                        padding: 10
-                                    }
-                                }
-                            ]
-                        }
+                            y: {
+                                
+                                suggestedMin: 0,
+                                suggestedMax: 100,
+
+                              }
+    
+                        },
+                        
                     }
                 };
-            
+                
+                
                 var myLineChart; // Variabile globale per il grafico
             
                 window.onload = function () {

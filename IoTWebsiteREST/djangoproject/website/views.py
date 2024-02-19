@@ -206,7 +206,7 @@ def master_detail_and_edit(request, master_id):
 
     return render(request, 'master.html', {'master': master, 'form': form, 'igrometri':igrometri})
 
-
+@login_required
 def sprinkler_detail_and_edit(request, sprinkler_id):
     irrigatore = get_object_or_404(Irrigatore, id=sprinkler_id)
     if request.method == 'POST':
