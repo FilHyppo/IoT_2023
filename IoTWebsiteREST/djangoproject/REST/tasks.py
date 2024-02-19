@@ -2,6 +2,29 @@ from celery import shared_task
 from django.utils import timezone
 from django.conf import settings
 import datetime
+from .meteo import PrevisioneMeteo
+import pytz
+
+def meteo_logic(prediction, previsione: PrevisioneMeteo):
+    desired_timezone = pytz.timezone('Europe/Rome')  # Ad esempio, fuso orario di Roma
+
+    current_time = datetime.datetime.now(desired_timezone)
+
+    hour_range = 6
+    info = 0
+    for i in range(hour_range):
+        forecast_time = current_time + datetime.timedelta(hours=i)
+        current_time = current_time.replace(minute=0, second=0, microsecond=0) + datetime.timedelta(hours=1)
+        forecast_hour = forecast_time.strftime("%H:%M")
+        forecast_date = forecast_time.strftime("%Y-%m-%d")
+        #print(f"Forecasting rain for {forecast_date} at {forecast_hour}")
+        info += previsione.get_rain(forecast_date, forecast_hour) if previsione.get_rain(forecast_date, forecast_hour) is not None else 0
+
+    info /= hour_range
+    if info > 0:
+        print(f'Prevista pioggia')
+        prediction = int(prediction/ (info*10)**2) #0.1-1.0 mm/h: Leggera pioggia.; 1.0-4.0 mm/h: Pioggia moderata.; 4.0+ mm/h: Pioggia intensa o pesante.
+    return prediction
 
 @shared_task
 def refresh_misurazioni():
@@ -58,8 +81,10 @@ def trigger_logic(id_irrigatore):
             lon=irrigatore.longitudine,
             date=timezone.now()
         )
-        
-        tasks.sprinkle.delay(irrigatore.id, prediction)
+        weather = PrevisioneMeteo(irrigatore.latitudine, irrigatore.longitudine)
+        prediction = meteo_logic(prediction, weather)
+        if prediction > 0:
+            tasks.sprinkle.delay(irrigatore.id, prediction)
         #print(f'Avviato irrigazione per {irrigatore.nome}')
     else:
         print(f'WARNING: Nessun igrometro associato a {irrigatore.nome}')

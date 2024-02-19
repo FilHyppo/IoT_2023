@@ -26,6 +26,7 @@ matplotlib = "*"
 tqdm = "*"
 scikit-learn = "*"
 pyopenssl = "*"
+werkzeug = "*"
 
 [dev-packages]
 
