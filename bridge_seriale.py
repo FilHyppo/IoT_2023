@@ -1,8 +1,35 @@
 import serial
+import configparser
 from master_obj import Master
 
-master = Master(user={'email': 'filippo@fam.bologna.it', 'password': 'admin', 'username': 'admin'})
+# Funzione per leggere l'indirizzo IP e la porta seriale dal file di configurazione
+def read_config():
+    config = configparser.ConfigParser()
+    try:
+        config.read('config.ini')
+        ip_address = config.get("DEFAULT", "IP_ADDRESS")
+        serial_port = config['DEFAULT']['SERIAL_PORT']
+        return ip_address, serial_port
+    except KeyError as e:
+        print(f"Chiave mancante nel file di configurazione: {e}")
+        exit(1)
+    except Exception as e:
+        print(f"Errore nel caricamento del file di configurazione: {e}")
+        exit(1)
 
+
+# Ottieni l'indirizzo IP e la porta seriale dalla configurazione
+ip_address, serial_port = read_config()
+
+# Crea un'istanza di Master utilizzando l'indirizzo IP letto dalla configurazione
+master = Master(user={'email': 'admin@admin.admin', 'password': 'admin', 'username': 'admin'}, base_url="http://"+ip_address+":8000/api/")
+
+# Rimani in ascolto dei dati dalla porta seriale
+try:
+    serialport = serial.Serial(serial_port, 9600, timeout=4)
+except serial.SerialException as e:
+    print(f"Errore nell'apertura della porta seriale: {e}")
+    exit()
 
 # Funzione che mappa il valore letto dal sensore di umidità in un valore percentuale
 def percentuale(x):
@@ -13,21 +40,9 @@ def percentuale(x):
     # faccio si che il valore percentuale sia compreso tra 0 e 100 e lo porto ad una sola cifra decimale
     return round(max(0, min(percentage, 100)), 0)
 
-
-try:
-    serialport = serial.Serial('/dev/cu.usbmodem101', 9600, timeout=4)  # cambiare valore porta in bse a quella scelta
-    # per arduino, su windows è COMx dove x è un intero (es. COM6)
-except serial.SerialException as e:
-    print(f"Errore nell'apertura della porta seriale: {e}")
-    exit()
-
 while True:
     try:
         arduinoData = serialport.readline().decode('ascii')
-        # print(arduinoData)
-
-        # divide la stringa ad ogni spazio, in posizione 0 c'è la stringa 'id' e in posizione 1 c'è il valore dell'id,
-        # in posizione 2 c'è la stringa 'umidita' e in posizione 3 c'è il valore dell'umidità
         parts = arduinoData.split()
         if len(parts) == 4:  # se la lunghezza della lista è 4 allora ci sono tutti i dati
             iD = parts[1]

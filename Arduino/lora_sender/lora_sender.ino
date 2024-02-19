@@ -9,7 +9,7 @@
 const unsigned int id = 4000;
 int count = 0;
 unsigned long previousMillis = 0;  // Utilizzata per memorizzare il tempo del ciclo precedente
-const long interval = 2000;        // Intervallo di tempo tra un ciclo e l'altro, cambiando questo valore regolo il delay
+const long interval = 10000;        // Intervallo di tempo tra un ciclo e l'altro, cambiando questo valore regolo il delay
 
 
 void setup() {

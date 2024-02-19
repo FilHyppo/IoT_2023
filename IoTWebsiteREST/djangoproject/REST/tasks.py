@@ -37,7 +37,8 @@ def get_lista_umidita(igrometri_associati):
         #estrae solo i valori di umidità
         umidita = [misurazione['umidita'] for misurazione in misurazioni_recenti]
         #aggiunge la media delle misurazioni recenti alla lista
-        lista_umidita.append(sum(umidita)/len(umidita))
+        if len(umidita) > 0:
+            lista_umidita.append(sum(umidita)/len(umidita))
     return lista_umidita
 
 
