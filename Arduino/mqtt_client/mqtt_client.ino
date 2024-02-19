@@ -23,7 +23,7 @@ MqttClient mqttClient(wifiClient);
 
 const char broker[] = "172.20.10.2";
 int port = 1883;
-const char topic[] = "/test";
+const char topic[] = "/irrigatore/abcdef";
 int durata = 0;
 
 

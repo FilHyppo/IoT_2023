@@ -42,7 +42,8 @@ ALLOWED_HOSTS = ["postgredjango.ew.r.appspot.com" ,
                  'localhost',
                  "127.0.0.1",
                  '192.168.0.65',
-                 '6efb-2a0e-41e-a6ad-0-79e4-3cd6-34ef-9b18.ngrok-free.app']
+                 '6efb-2a0e-41e-a6ad-0-79e4-3cd6-34ef-9b18.ngrok-free.app',
+                 '172.20.10.2']
 
 
 
@@ -260,14 +261,14 @@ ACCOUNT_FORMS = {
 
 
 #MQTT configuration
-MQTT_BROKER_HOST = "localhost"
+MQTT_BROKER_HOST = "172.20.10.2"
 MQTT_BROKER_PORT = 1883  # Cambialo se necessario
 MQTT_BROKER_KEEPALIVE = 60  # Cambialo se necessario
 MQTT_QOS = 0
 MQTT_USERNAME = '' #get_secret('MQTT_USERNAME')
 MQTT_PASSWORD = '' #get_secret('MQTT_PASSWORD')
 MQTT_CLIENT_ID = 'django_mqtt_client'
-MQTT_TOPIC_IRRIGATORE = 'irrigatore/'
+MQTT_TOPIC_IRRIGATORE = '/irrigatore/'
 
 
 #CELERY configuration

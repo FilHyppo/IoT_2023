@@ -6,14 +6,14 @@ from torch import nn
 #from rnn import RNN
 
 def predict(lista_umidita, lat, lon, day_sin, day_cos, year_sin, year_cos):
-    #model = torch.load('rnn_model.pth')
-    #model.eval()
+    model = torch.load('rnn_model.pth')
+    model.eval()
     with torch.no_grad():
         input = [u for u in lista_umidita] + [1, lat, lon, day_sin, day_cos, year_sin, year_cos]
         #rendilo un tensore
         input_tensor = torch.tensor(input, dtype=torch.float32)
         print(f'input_tensor: {input_tensor}')
-        #output = model(input_tensor)
+        output = model(input_tensor)
         irrigation_amount = 10 #output.item()
         return irrigation_amount
 
