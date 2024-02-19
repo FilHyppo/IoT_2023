@@ -25,7 +25,7 @@ pandas = "*"
 matplotlib = "*"
 tqdm = "*"
 scikit-learn = "*"
-
+pyopenssl = "*"
 
 [dev-packages]
 
