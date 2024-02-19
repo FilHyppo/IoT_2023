@@ -256,3 +256,7 @@ def add_sprinkler(request):
 
 def about(request):
     return render(request, 'about.html')
+
+def misurazioni_ajax(request, igrometro_id):
+    igrometro = get_object_or_404(Igrometro, id=igrometro_id)
+    return JsonResponse(igrometro.misurazioni, safe=False)

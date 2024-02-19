@@ -78,19 +78,22 @@
             document.addEventListener("DOMContentLoaded", function() {
                 // Recupera i dati dal template Django
                 var misurazioni = {{ igrometro.misurazioni|safe }};
+                var igrometroId = "{{ igrometro.id }}"; // Ottieni l'ID dell'igrometro dal template Django
                 console.log("Qua")
-        
-                // Estrai le date e l'umidità
-                var dateLabels = misurazioni.map(function(misurazione) {
-                    return misurazione.data;
-                });
-                console.log(dateLabels)
-        
-                var umiditaData = misurazioni.map(function(misurazione) {
-                    return misurazione.umidita;
-                });
+            
+               // Estrai le date e l'umidità
+var lastFifteenMeasurements = misurazioni.slice(-10); // Selezione delle ultime 10 misurazioni
+
+var dateLabels = lastFifteenMeasurements.map(function(misurazione) {
+    return misurazione.data;
+});
+console.log(dateLabels);
+
+var umiditaData = lastFifteenMeasurements.map(function(misurazione) {
+    return misurazione.umidita;
+});
                 console.log(umiditaData)
-        
+            
                 // Crea il grafico
                 var ctx = document.getElementById('myChart').getContext('2d');
                 
@@ -106,18 +109,18 @@
                         quarter: "rgba(80, 102, 120, 0.25)"
                     }
                 };
-        
+            
                 const weight = umiditaData;
-        
+            
                 const labels = dateLabels;
-        
+            
                 ctx.canvas.height = 100;
-        
+            
                 gradient = ctx.createLinearGradient(0, 25, 0, 600);
                 gradient.addColorStop(0, colors.purple.half);
                 gradient.addColorStop(0.35, colors.purple.quarter);
                 gradient.addColorStop(1, colors.purple.zero);
-        
+            
                 const options = {
                     type: "line",
                     data: {
@@ -181,15 +184,49 @@
                         }
                     }
                 };
-        
+            
+                var myLineChart; // Variabile globale per il grafico
+            
                 window.onload = function () {
-                    window.myLine = new Chart(ctx, options);
+                    myLineChart = new Chart(ctx, options); // Inizializzazione del grafico
                     Chart.defaults.global.defaultFontColor = colors.indigo.default;
                     Chart.defaults.global.defaultFontFamily = "Fira Sans";
                 };
+            
+            
+                function fetchDataAndUpdateChart(igrometroId) {
+                    // Effettua una richiesta Ajax per ottenere i dati aggiornati
+                    fetch(`/update_graph/${igrometroId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            var lastFifteenMeasurements = data.slice(-10);
+            
+                            // Estrai le date e l'umidità dalle ultime 15 misurazioni
+                            var dateLabels = lastFifteenMeasurements.map(misurazione => misurazione.data);
+                            var umiditaData = lastFifteenMeasurements.map(misurazione => misurazione.umidita);
+                            console.log(lastFifteenMeasurements)
+                            
+                            // Aggiorna i dati del grafico utilizzando la variabile globale
+                            myLineChart.data.labels = dateLabels;
+                            myLineChart.data.datasets[0].data = umiditaData;
+                            myLineChart.update();
+                        })
+            
+            
+                        .catch(error => {
+                            console.error('Si è verificato un errore durante il recupero dei dati:', error);
+                        });
+                }
+            
+            
+            
+                // Aggiorna il grafico ogni tot millisecondi (ad esempio, ogni 5 secondi)
+                setInterval(() => {
+                    fetchDataAndUpdateChart(igrometroId);
+                }, 1000);
             });
+            
         </script>
         
-
-        
+          
 {% endblock %}
