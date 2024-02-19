@@ -40,12 +40,17 @@ def percentuale(x):
     # faccio si che il valore percentuale sia compreso tra 0 e 100 e lo porto ad una sola cifra decimale
     return round(max(0, min(percentage, 100)), 0)
 
+i=0
+
 while True:
+    
     try:
         arduinoData = serialport.readline().decode('ascii')
         parts = arduinoData.split()
         if len(parts) == 4:  # se la lunghezza della lista è 4 allora ci sono tutti i dati
-            iD = parts[1]
+            iD = int(parts[1]) + i
+            i+=1
+            i = i % 10
             umidita = percentuale(parts[3])  # converto il valore dell'umidità in percentuale
 
             # Stampa i valori letti

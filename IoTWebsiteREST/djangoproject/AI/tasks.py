@@ -3,18 +3,37 @@ import numpy as np
 import pandas as pd
 import torch
 from torch import nn
-#from rnn import RNN
+
+class RNN(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(RNN, self).__init__()
+        self.hidden_size = hidden_size
+        self.lstm = nn.LSTM(input_size, hidden_size, batch_first=True)
+        self.fc = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x):
+        x = x.unsqueeze(1)
+        lstm_out, _ = self.lstm(x)
+        out = self.fc(lstm_out[:, -1, :])
+        return out
+
 
 def predict(lista_umidita, lat, lon, day_sin, day_cos, year_sin, year_cos):
-    model = torch.load('rnn_model.pth')
+    input_size = 17  # Numero di features
+    hidden_size = 128
+    output_size = 1
+    model = RNN(input_size, hidden_size, output_size)
+    params = torch.load('AI/rnn_model.pth')
+    model.load_state_dict(params)
     model.eval()
     with torch.no_grad():
         input = [u for u in lista_umidita] + [1, lat, lon, day_sin, day_cos, year_sin, year_cos]
         #rendilo un tensore
-        input_tensor = torch.tensor(input, dtype=torch.float32)
-        print(f'input_tensor: {input_tensor}')
+        input_tensor = torch.tensor([input], dtype=torch.float32)
+        #print(f'input_tensor: {input_tensor}')
         output = model(input_tensor)
-        irrigation_amount = 10 #output.item()
+        irrigation_amount = int(output.item())
+        print(f'irrigation_amount: {irrigation_amount}')
         return irrigation_amount
 
 
