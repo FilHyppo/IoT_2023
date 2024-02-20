@@ -5,18 +5,19 @@
 ArduinoLEDMatrix matrix;
 
 byte frame[8][12] = {
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+};
 
 
-char ssid[] = MY_WIFI_SSID;        // network SSID
-char pass[] = MY_WIFI_PASS;    // network password
+char ssid[] = MY_WIFI_SSID;  // network SSID
+char pass[] = MY_WIFI_PASS;  // network password
 
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
@@ -54,7 +55,8 @@ void setup() {
     Serial.print("connessione fallita! errore = ");
     Serial.println(mqttClient.connectError());
 
-    while (1);
+    while (1)
+      ;
   }
 
   Serial.println("connesso al broker MQTT!");
@@ -68,8 +70,8 @@ void setup() {
   Serial.println();
 
   // iscrizione al topic
-  mqttClient.subscribe(topic);
-  
+  mqttClient.subscribe(topic, 2);
+
 
   // posso disiscrivermi:
   // mqttClient.unsubscribe(topic);
@@ -95,23 +97,23 @@ void onMqttMessage(int messageSize) {
   Serial.println(" bytes:");
 
   // leggo il contenuto del messaggio e lo elaboro
-  String messaggio = ""; // Stringa per memorizzare il messaggio letto
+  String messaggio = "";  // Stringa per memorizzare il messaggio letto
 
   while (mqttClient.available()) {
     char carattere = mqttClient.read();
-    if (isdigit(carattere)) { 
-        messaggio += carattere; 
+    if (isdigit(carattere)) {
+      messaggio += carattere;
     }
-}
+  }
   durata = messaggio.toInt();
-  Serial. print("la durata dell'irrigazione è di ");
+  Serial.print("la durata dell'irrigazione è di ");
   Serial.print(durata);
-  Serial. println(" secondi");
+  Serial.println(" secondi");
 
   //conto alla rovescia sulla matrice di led
   digitalWrite(11, LOW);
 
-  unsigned long t = millis(); 
+  unsigned long t = millis();
 
   for (int i = durata; i >= 0; i--) {
     clearDisplay();
@@ -136,236 +138,229 @@ void onMqttMessage(int messageSize) {
   while (millis() - t < 500) {
   }
   digitalWrite(11, LOW);
-  
 }
 
 
 
-void clearDisplay()
-{
-  for (int i = 0; i < 8; i++)
-  {
-    for (int j = 0; j < 12; j++)
-    {
+void clearDisplay() {
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 12; j++) {
       frame[i][j] = 0;
     }
   }
 }
 
-void digit(int n, int offx, int offy)
-{
-  switch (n)
-  {
-  case 0:
-    frame[offy][offx + 0] = 1;
-    frame[offy][offx + 1] = 1;
-    frame[offy][offx + 2] = 1;
+void digit(int n, int offx, int offy) {
+  switch (n) {
+    case 0:
+      frame[offy][offx + 0] = 1;
+      frame[offy][offx + 1] = 1;
+      frame[offy][offx + 2] = 1;
 
-    frame[offy + 1][offx + 0] = 1;
-    frame[offy + 1][offx + 1] = 0;
-    frame[offy + 1][offx + 2] = 1;
+      frame[offy + 1][offx + 0] = 1;
+      frame[offy + 1][offx + 1] = 0;
+      frame[offy + 1][offx + 2] = 1;
 
-    frame[offy + 2][offx + 0] = 1;
-    frame[offy + 2][offx + 1] = 0;
-    frame[offy + 2][offx + 2] = 1;
+      frame[offy + 2][offx + 0] = 1;
+      frame[offy + 2][offx + 1] = 0;
+      frame[offy + 2][offx + 2] = 1;
 
-    frame[offy + 3][offx + 0] = 1;
-    frame[offy + 3][offx + 1] = 0;
-    frame[offy + 3][offx + 2] = 1;
+      frame[offy + 3][offx + 0] = 1;
+      frame[offy + 3][offx + 1] = 0;
+      frame[offy + 3][offx + 2] = 1;
 
-    frame[offy + 4][offx + 0] = 1;
-    frame[offy + 4][offx + 1] = 1;
-    frame[offy + 4][offx + 2] = 1;
-    break;
-  case 1:
-    frame[offy][offx + 0] = 0;
-    frame[offy][offx + 1] = 0;
-    frame[offy][offx + 2] = 1;
+      frame[offy + 4][offx + 0] = 1;
+      frame[offy + 4][offx + 1] = 1;
+      frame[offy + 4][offx + 2] = 1;
+      break;
+    case 1:
+      frame[offy][offx + 0] = 0;
+      frame[offy][offx + 1] = 0;
+      frame[offy][offx + 2] = 1;
 
-    frame[offy + 1][offx + 0] = 0;
-    frame[offy + 1][offx + 1] = 1;
-    frame[offy + 1][offx + 2] = 1;
+      frame[offy + 1][offx + 0] = 0;
+      frame[offy + 1][offx + 1] = 1;
+      frame[offy + 1][offx + 2] = 1;
 
-    frame[offy + 2][offx + 0] = 0;
-    frame[offy + 2][offx + 1] = 0;
-    frame[offy + 2][offx + 2] = 1;
+      frame[offy + 2][offx + 0] = 0;
+      frame[offy + 2][offx + 1] = 0;
+      frame[offy + 2][offx + 2] = 1;
 
-    frame[offy + 3][offx + 0] = 0;
-    frame[offy + 3][offx + 1] = 0;
-    frame[offy + 3][offx + 2] = 1;
+      frame[offy + 3][offx + 0] = 0;
+      frame[offy + 3][offx + 1] = 0;
+      frame[offy + 3][offx + 2] = 1;
 
-    frame[offy + 4][offx + 0] = 0;
-    frame[offy + 4][offx + 1] = 0;
-    frame[offy + 4][offx + 2] = 1;
-    break;
-  case 2:
-    frame[offy][offx + 0] = 1;
-    frame[offy][offx + 1] = 1;
-    frame[offy][offx + 2] = 1;
+      frame[offy + 4][offx + 0] = 0;
+      frame[offy + 4][offx + 1] = 0;
+      frame[offy + 4][offx + 2] = 1;
+      break;
+    case 2:
+      frame[offy][offx + 0] = 1;
+      frame[offy][offx + 1] = 1;
+      frame[offy][offx + 2] = 1;
 
-    frame[offy + 1][offx + 0] = 0;
-    frame[offy + 1][offx + 1] = 0;
-    frame[offy + 1][offx + 2] = 1;
+      frame[offy + 1][offx + 0] = 0;
+      frame[offy + 1][offx + 1] = 0;
+      frame[offy + 1][offx + 2] = 1;
 
-    frame[offy + 2][offx + 0] = 1;
-    frame[offy + 2][offx + 1] = 1;
-    frame[offy + 2][offx + 2] = 1;
+      frame[offy + 2][offx + 0] = 1;
+      frame[offy + 2][offx + 1] = 1;
+      frame[offy + 2][offx + 2] = 1;
 
-    frame[offy + 3][offx + 0] = 1;
-    frame[offy + 3][offx + 1] = 0;
-    frame[offy + 3][offx + 2] = 0;
+      frame[offy + 3][offx + 0] = 1;
+      frame[offy + 3][offx + 1] = 0;
+      frame[offy + 3][offx + 2] = 0;
 
-    frame[offy + 4][offx + 0] = 1;
-    frame[offy + 4][offx + 1] = 1;
-    frame[offy + 4][offx + 2] = 1;
-    break;
-  case 3:
-    frame[offy][offx + 0] = 1;
-    frame[offy][offx + 1] = 1;
-    frame[offy][offx + 2] = 1;
+      frame[offy + 4][offx + 0] = 1;
+      frame[offy + 4][offx + 1] = 1;
+      frame[offy + 4][offx + 2] = 1;
+      break;
+    case 3:
+      frame[offy][offx + 0] = 1;
+      frame[offy][offx + 1] = 1;
+      frame[offy][offx + 2] = 1;
 
-    frame[offy + 1][offx + 0] = 0;
-    frame[offy + 1][offx + 1] = 0;
-    frame[offy + 1][offx + 2] = 1;
+      frame[offy + 1][offx + 0] = 0;
+      frame[offy + 1][offx + 1] = 0;
+      frame[offy + 1][offx + 2] = 1;
 
-    frame[offy + 2][offx + 0] = 1;
-    frame[offy + 2][offx + 1] = 1;
-    frame[offy + 2][offx + 2] = 1;
+      frame[offy + 2][offx + 0] = 1;
+      frame[offy + 2][offx + 1] = 1;
+      frame[offy + 2][offx + 2] = 1;
 
-    frame[offy + 3][offx + 0] = 0;
-    frame[offy + 3][offx + 1] = 0;
-    frame[offy + 3][offx + 2] = 1;
+      frame[offy + 3][offx + 0] = 0;
+      frame[offy + 3][offx + 1] = 0;
+      frame[offy + 3][offx + 2] = 1;
 
-    frame[offy + 4][offx + 0] = 1;
-    frame[offy + 4][offx + 1] = 1;
-    frame[offy + 4][offx + 2] = 1;
-    break;
-  case 4:
-    frame[offy][offx + 0] = 1;
-    frame[offy][offx + 1] = 0;
-    frame[offy][offx + 2] = 1;
+      frame[offy + 4][offx + 0] = 1;
+      frame[offy + 4][offx + 1] = 1;
+      frame[offy + 4][offx + 2] = 1;
+      break;
+    case 4:
+      frame[offy][offx + 0] = 1;
+      frame[offy][offx + 1] = 0;
+      frame[offy][offx + 2] = 1;
 
-    frame[offy + 1][offx + 0] = 1;
-    frame[offy + 1][offx + 1] = 0;
-    frame[offy + 1][offx + 2] = 1;
+      frame[offy + 1][offx + 0] = 1;
+      frame[offy + 1][offx + 1] = 0;
+      frame[offy + 1][offx + 2] = 1;
 
-    frame[offy + 2][offx + 0] = 1;
-    frame[offy + 2][offx + 1] = 1;
-    frame[offy + 2][offx + 2] = 1;
+      frame[offy + 2][offx + 0] = 1;
+      frame[offy + 2][offx + 1] = 1;
+      frame[offy + 2][offx + 2] = 1;
 
-    frame[offy + 3][offx + 0] = 0;
-    frame[offy + 3][offx + 1] = 0;
-    frame[offy + 3][offx + 2] = 1;
+      frame[offy + 3][offx + 0] = 0;
+      frame[offy + 3][offx + 1] = 0;
+      frame[offy + 3][offx + 2] = 1;
 
-    frame[offy + 4][offx + 0] = 0;
-    frame[offy + 4][offx + 1] = 0;
-    frame[offy + 4][offx + 2] = 1;
-    break;
-  case 5:
-    frame[offy][offx + 0] = 1;
-    frame[offy][offx + 1] = 1;
-    frame[offy][offx + 2] = 1;
+      frame[offy + 4][offx + 0] = 0;
+      frame[offy + 4][offx + 1] = 0;
+      frame[offy + 4][offx + 2] = 1;
+      break;
+    case 5:
+      frame[offy][offx + 0] = 1;
+      frame[offy][offx + 1] = 1;
+      frame[offy][offx + 2] = 1;
 
-    frame[offy + 1][offx + 0] = 1;
-    frame[offy + 1][offx + 1] = 0;
-    frame[offy + 1][offx + 2] = 0;
+      frame[offy + 1][offx + 0] = 1;
+      frame[offy + 1][offx + 1] = 0;
+      frame[offy + 1][offx + 2] = 0;
 
-    frame[offy + 2][offx + 0] = 1;
-    frame[offy + 2][offx + 1] = 1;
-    frame[offy + 2][offx + 2] = 1;
+      frame[offy + 2][offx + 0] = 1;
+      frame[offy + 2][offx + 1] = 1;
+      frame[offy + 2][offx + 2] = 1;
 
-    frame[offy + 3][offx + 0] = 0;
-    frame[offy + 3][offx + 1] = 0;
-    frame[offy + 3][offx + 2] = 1;
+      frame[offy + 3][offx + 0] = 0;
+      frame[offy + 3][offx + 1] = 0;
+      frame[offy + 3][offx + 2] = 1;
 
-    frame[offy + 4][offx + 0] = 1;
-    frame[offy + 4][offx + 1] = 1;
-    frame[offy + 4][offx + 2] = 1;
-    break;
-  case 6:
-    frame[offy][offx + 0] = 1;
-    frame[offy][offx + 1] = 1;
-    frame[offy][offx + 2] = 1;
+      frame[offy + 4][offx + 0] = 1;
+      frame[offy + 4][offx + 1] = 1;
+      frame[offy + 4][offx + 2] = 1;
+      break;
+    case 6:
+      frame[offy][offx + 0] = 1;
+      frame[offy][offx + 1] = 1;
+      frame[offy][offx + 2] = 1;
 
-    frame[offy + 1][offx + 0] = 1;
-    frame[offy + 1][offx + 1] = 0;
-    frame[offy + 1][offx + 2] = 0;
+      frame[offy + 1][offx + 0] = 1;
+      frame[offy + 1][offx + 1] = 0;
+      frame[offy + 1][offx + 2] = 0;
 
-    frame[offy + 2][offx + 0] = 1;
-    frame[offy + 2][offx + 1] = 1;
-    frame[offy + 2][offx + 2] = 1;
+      frame[offy + 2][offx + 0] = 1;
+      frame[offy + 2][offx + 1] = 1;
+      frame[offy + 2][offx + 2] = 1;
 
-    frame[offy + 3][offx + 0] = 1;
-    frame[offy + 3][offx + 1] = 0;
-    frame[offy + 3][offx + 2] = 1;
+      frame[offy + 3][offx + 0] = 1;
+      frame[offy + 3][offx + 1] = 0;
+      frame[offy + 3][offx + 2] = 1;
 
-    frame[offy + 4][offx + 0] = 1;
-    frame[offy + 4][offx + 1] = 1;
-    frame[offy + 4][offx + 2] = 1;
-    break;
-  case 7:
-    frame[offy][offx + 0] = 1;
-    frame[offy][offx + 1] = 1;
-    frame[offy][offx + 2] = 1;
+      frame[offy + 4][offx + 0] = 1;
+      frame[offy + 4][offx + 1] = 1;
+      frame[offy + 4][offx + 2] = 1;
+      break;
+    case 7:
+      frame[offy][offx + 0] = 1;
+      frame[offy][offx + 1] = 1;
+      frame[offy][offx + 2] = 1;
 
-    frame[offy + 1][offx + 0] = 0;
-    frame[offy + 1][offx + 1] = 0;
-    frame[offy + 1][offx + 2] = 1;
+      frame[offy + 1][offx + 0] = 0;
+      frame[offy + 1][offx + 1] = 0;
+      frame[offy + 1][offx + 2] = 1;
 
-    frame[offy + 2][offx + 0] = 0;
-    frame[offy + 2][offx + 1] = 0;
-    frame[offy + 2][offx + 2] = 1;
+      frame[offy + 2][offx + 0] = 0;
+      frame[offy + 2][offx + 1] = 0;
+      frame[offy + 2][offx + 2] = 1;
 
-    frame[offy + 3][offx + 0] = 0;
-    frame[offy + 3][offx + 1] = 0;
-    frame[offy + 3][offx + 2] = 1;
+      frame[offy + 3][offx + 0] = 0;
+      frame[offy + 3][offx + 1] = 0;
+      frame[offy + 3][offx + 2] = 1;
 
-    frame[offy + 4][offx + 0] = 0;
-    frame[offy + 4][offx + 1] = 0;
-    frame[offy + 4][offx + 2] = 1;
-    break;
-  case 8:
-    frame[offy][offx + 0] = 1;
-    frame[offy][offx + 1] = 1;
-    frame[offy][offx + 2] = 1;
+      frame[offy + 4][offx + 0] = 0;
+      frame[offy + 4][offx + 1] = 0;
+      frame[offy + 4][offx + 2] = 1;
+      break;
+    case 8:
+      frame[offy][offx + 0] = 1;
+      frame[offy][offx + 1] = 1;
+      frame[offy][offx + 2] = 1;
 
-    frame[offy + 1][offx + 0] = 1;
-    frame[offy + 1][offx + 1] = 0;
-    frame[offy + 1][offx + 2] = 1;
+      frame[offy + 1][offx + 0] = 1;
+      frame[offy + 1][offx + 1] = 0;
+      frame[offy + 1][offx + 2] = 1;
 
-    frame[offy + 2][offx + 0] = 1;
-    frame[offy + 2][offx + 1] = 1;
-    frame[offy + 2][offx + 2] = 1;
+      frame[offy + 2][offx + 0] = 1;
+      frame[offy + 2][offx + 1] = 1;
+      frame[offy + 2][offx + 2] = 1;
 
-    frame[offy + 3][offx + 0] = 1;
-    frame[offy + 3][offx + 1] = 0;
-    frame[offy + 3][offx + 2] = 1;
+      frame[offy + 3][offx + 0] = 1;
+      frame[offy + 3][offx + 1] = 0;
+      frame[offy + 3][offx + 2] = 1;
 
-    frame[offy + 4][offx + 0] = 1;
-    frame[offy + 4][offx + 1] = 1;
-    frame[offy + 4][offx + 2] = 1;
-    break;
-  case 9:
-    frame[offy][offx + 0] = 1;
-    frame[offy][offx + 1] = 1;
-    frame[offy][offx + 2] = 1;
+      frame[offy + 4][offx + 0] = 1;
+      frame[offy + 4][offx + 1] = 1;
+      frame[offy + 4][offx + 2] = 1;
+      break;
+    case 9:
+      frame[offy][offx + 0] = 1;
+      frame[offy][offx + 1] = 1;
+      frame[offy][offx + 2] = 1;
 
-    frame[offy + 1][offx + 0] = 1;
-    frame[offy + 1][offx + 1] = 0;
-    frame[offy + 1][offx + 2] = 1;
+      frame[offy + 1][offx + 0] = 1;
+      frame[offy + 1][offx + 1] = 0;
+      frame[offy + 1][offx + 2] = 1;
 
-    frame[offy + 2][offx + 0] = 1;
-    frame[offy + 2][offx + 1] = 1;
-    frame[offy + 2][offx + 2] = 1;
+      frame[offy + 2][offx + 0] = 1;
+      frame[offy + 2][offx + 1] = 1;
+      frame[offy + 2][offx + 2] = 1;
 
-    frame[offy + 3][offx + 0] = 0;
-    frame[offy + 3][offx + 1] = 0;
-    frame[offy + 3][offx + 2] = 1;
+      frame[offy + 3][offx + 0] = 0;
+      frame[offy + 3][offx + 1] = 0;
+      frame[offy + 3][offx + 2] = 1;
 
-    frame[offy + 4][offx + 0] = 1;
-    frame[offy + 4][offx + 1] = 1;
-    frame[offy + 4][offx + 2] = 1;
-    break;
+      frame[offy + 4][offx + 0] = 1;
+      frame[offy + 4][offx + 1] = 1;
+      frame[offy + 4][offx + 2] = 1;
+      break;
   }
 }
-
